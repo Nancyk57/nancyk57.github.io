@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="A self-improving multi-agent coding runtime designed to make resource-constrained local LLMs more reliable at non-trivial software development tasks."
+  >
+
+  <title>
+    Self-Improving Coding Harness — Haaroon Afroz
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="/styles.css"
+  >
+
+</head>
+
+
+<body>
+
+
+  <!-- =========================
+       NAVIGATION
+  ========================== -->
+
+  <header class="site-header">
+
+    <div class="container nav-container">
+
+      <a href="/" class="site-logo">
+        HA
+      </a>
+
+      <nav class="desktop-nav">
+
+        <a href="/">
+          Portfolio
+        </a>
+
+        <a
+          href="https://github.com/haaroonafroz/task-coder-agent"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub
+        </a>
+
+      </nav>
+
+      <button
+        class="mobile-menu-button"
+        aria-label="Open navigation"
+        aria-expanded="false"
+      >
+        Menu
+      </button>
+
+    </div>
+
+    <nav class="mobile-nav">
+
+      <a href="/">
+        Portfolio
+      </a>
+
+      <a
+        href="https://github.com/haaroonafroz/task-coder-agent"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        GitHub
+      </a>
+
+    </nav>
+
+  </header>
+
+
+  <main>
+
+
+    <!-- =========================
+         PROJECT HERO
+    ========================== -->
+
+    <section class="project-hero section">
+
+      <div class="container">
+
+        <a
+          href="/#projects"
+          class="back-link"
+        >
+          ← Selected projects
+        </a>
+
+        <p class="eyebrow project-eyebrow">
+          AGENT SYSTEMS · LOCAL LLMS · HARNESS ENGINEERING
+        </p>
+
+        <h1 class="project-title">
+          Can system design make small local LLMs
+          <span class="muted-text">
+            reliable coding agents?
+          </span>
+        </h1>
+
+        <p class="project-lead">
+          I built a local-first multi-agent coding runtime
+          designed around resource-constrained LLMs.
+          Instead of relying on model scale alone, the
+          system moves reliability into the surrounding
+          architecture through specialized roles,
+          validation contracts, deterministic checks,
+          bounded recovery and persistent memory.
+        </p>
+
+
+        <div class="hero-actions">
+
+          <a
+            href="https://github.com/haaroonafroz/task-coder-agent"
+            class="button button-primary"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View repository ↗
+          </a>
+
+          <a
+            href="#architecture"
+            class="button button-secondary"
+          >
+            Explore architecture
+          </a>
+
+        </div>
+
+
+        <div class="project-meta-grid">
+
+          <div class="meta-item">
+            <span class="meta-label">
+              PROJECT TYPE
+            </span>
+
+            <strong>
+              Personal R&D
+            </strong>
+          </div>
+
+
+          <div class="meta-item">
+            <span class="meta-label">
+              FOCUS
+            </span>
+
+            <strong>
+              Agent reliability
+            </strong>
+          </div>
+
+
+          <div class="meta-item">
+            <span class="meta-label">
+              INFERENCE
+            </span>
+
+            <strong>
+              Local 27B-class LLMs
+            </strong>
+          </div>
+
+
+          <div class="meta-item">
+            <span class="meta-label">
+              EXECUTION
+            </span>
+
+            <strong>
+              Local-first
+            </strong>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         PROBLEM
+    ========================== -->
+
+    <section class="section section-bordered">
+
+      <div class="container">
+
+        <div class="section-heading">
+
+          <p class="eyebrow">
+            01 · THE PROBLEM
+          </p>
+
+          <h2>
+            Smaller models expose weaknesses
+            that larger models often hide.
+          </h2>
+
+          <p class="section-description">
+            A coding agent has to plan, inspect a repository,
+            edit files, run tools, understand failures and
+            validate the result. Asking one constrained model
+            to do all of those things inside one long context
+            creates several failure modes.
+          </p>
+
+        </div>
+
+
+        <div class="three-column-grid">
+
+          <article class="info-card">
+
+            <span class="card-index">
+              01
+            </span>
+
+            <h3>
+              Long-horizon drift
+            </h3>
+
+            <p>
+              Planning, implementation and debugging compete
+              for the same context. Mistakes early in a task
+              can distort everything that follows.
+            </p>
+
+          </article>
+
+
+          <article class="info-card">
+
+            <span class="card-index">
+              02
+            </span>
+
+            <h3>
+              Failure compounds
+            </h3>
+
+            <p>
+              A bad implementation is different from a bad
+              plan. Treating both as the same failure usually
+              leads to repeated retries without correcting the
+              underlying cause.
+            </p>
+
+          </article>
+
+
+          <article class="info-card">
+
+            <span class="card-index">
+              03
+            </span>
+
+            <h3>
+              Hardware is finite
+            </h3>
+
+            <p>
+              Running several large agents concurrently is
+              unrealistic on constrained local GPUs. The
+              architecture therefore has to work serially and
+              use each model call deliberately.
+            </p>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         HYPOTHESIS
+    ========================== -->
+
+    <section class="section thesis-section">
+
+      <div class="container">
+
+        <p class="eyebrow">
+          02 · DESIGN HYPOTHESIS
+        </p>
+
+        <div class="thesis-block">
+
+          <p class="thesis-small">
+            MODEL CAPABILITY
+          </p>
+
+          <p class="thesis-symbol">
+            ≠
+          </p>
+
+          <p class="thesis-large">
+            SYSTEM CAPABILITY
+          </p>
+
+        </div>
+
+        <p class="thesis-description">
+          Instead of asking a smaller model to behave like a
+          frontier model, I designed the runtime so that each
+          model call has a narrower job and the harness takes
+          responsibility for coordination, validation and
+          recovery.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         ARCHITECTURE
+    ========================== -->
+
+    <section
+      class="section section-bordered"
+      id="architecture"
+    >
+
+      <div class="container">
+
+        <div class="section-heading">
+
+          <p class="eyebrow">
+            03 · ARCHITECTURE
+          </p>
+
+          <h2>
+            Separate planning, implementation
+            and validation.
+          </h2>
+
+          <p class="section-description">
+            The runtime routes requests into focused execution
+            paths and keeps the main development loop explicit:
+            plan, implement, validate, recover.
+          </p>
+
+        </div>
+
+
+        <!-- Architecture diagram -->
+
+        <div class="architecture">
+
+          <div class="architecture-node primary-node">
+            <span class="node-label">
+              INPUT
+            </span>
+
+            <strong>
+              User Request
+            </strong>
+          </div>
+
+
+          <div class="flow-arrow">
+            ↓
+          </div>
+
+
+          <div class="architecture-node">
+            <span class="node-label">
+              ROUTING
+            </span>
+
+            <strong>
+              Triage
+            </strong>
+
+            <small>
+              mission · hotfix · review
+            </small>
+          </div>
+
+
+          <div class="flow-arrow">
+            ↓
+          </div>
+
+
+          <div class="architecture-node">
+            <span class="node-label">
+              PLANNING
+            </span>
+
+            <strong>
+              Orchestrator
+            </strong>
+
+            <small>
+              milestones + validation contracts
+            </small>
+          </div>
+
+
+          <div class="flow-arrow">
+            ↓
+          </div>
+
+
+          <div class="architecture-node system-node">
+            <span class="node-label">
+              DETERMINISTIC
+            </span>
+
+            <strong>
+              Plan Linter
+            </strong>
+
+            <small>
+              schema · dependencies · policies
+            </small>
+          </div>
+
+
+          <div class="flow-arrow">
+            ↓
+          </div>
+
+
+          <div class="architecture-node">
+            <span class="node-label">
+              EXECUTION
+            </span>
+
+            <strong>
+              Worker
+            </strong>
+
+            <small>
+              scoped implementation
+            </small>
+          </div>
+
+
+          <div class="flow-arrow">
+            ↓
+          </div>
+
+
+          <div class="architecture-node validator-node">
+            <span class="node-label">
+              QA
+            </span>
+
+            <strong>
+              Validator
+            </strong>
+
+            <small>
+              contracts + diff review
+            </small>
+          </div>
+
+
+          <div class="validation-outcomes">
+
+            <div class="outcome-card">
+              <span>PASS</span>
+              <strong>Commit</strong>
+            </div>
+
+            <div class="outcome-card">
+              <span>FAIL</span>
+              <strong>Worker Retry</strong>
+            </div>
+
+            <div class="outcome-card">
+              <span>REPLAN</span>
+              <strong>Patch Plan</strong>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- Architecture roles -->
+
+        <div class="four-column-grid architecture-role-grid">
+
+          <article class="role-card">
+
+            <span class="role-number">
+              01
+            </span>
+
+            <h3>
+              Orchestrator
+            </h3>
+
+            <p>
+              Translates a request into bounded milestones,
+              dependencies and acceptance criteria rather
+              than directly writing code.
+            </p>
+
+          </article>
+
+
+          <article class="role-card">
+
+            <span class="role-number">
+              02
+            </span>
+
+            <h3>
+              Worker
+            </h3>
+
+            <p>
+              Implements one scoped milestone using the tools
+              and files relevant to that part of the plan.
+            </p>
+
+          </article>
+
+
+          <article class="role-card">
+
+            <span class="role-number">
+              03
+            </span>
+
+            <h3>
+              Validator
+            </h3>
+
+            <p>
+              Executes validation contracts, inspects the
+              resulting diff and decides whether the work
+              passes, needs implementation repair or requires
+              replanning.
+            </p>
+
+          </article>
+
+
+          <article class="role-card">
+
+            <span class="role-number">
+              04
+            </span>
+
+            <h3>
+              Runtime
+            </h3>
+
+            <p>
+              Owns memory, permissions, retries, plan
+              mutation, session state, observability and
+              execution boundaries.
+            </p>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         CORE IDEAS
+    ========================== -->
+
+    <section class="section section-bordered">
+
+      <div class="container">
+
+        <div class="section-heading">
+
+          <p class="eyebrow">
+            04 · CORE SYSTEM IDEAS
+          </p>
+
+          <h2>
+            The harness does more than call
+            three agents.
+          </h2>
+
+        </div>
+
+
+        <div class="feature-grid">
+
+          <article class="feature-card">
+
+            <p class="feature-label">
+              ACCEPTANCE-FIRST
+            </p>
+
+            <h3>
+              Define success before implementation.
+            </h3>
+
+            <p>
+              Milestones carry observable acceptance
+              criteria and validation contracts so the
+              system knows how work will be checked before
+              the Worker starts editing.
+            </p>
+
+          </article>
+
+
+          <article class="feature-card">
+
+            <p class="feature-label">
+              DETERMINISTIC SAFEGUARDS
+            </p>
+
+            <h3>
+              Don't spend reasoning on normal software checks.
+            </h3>
+
+            <p>
+              Plan structure, dependencies and policy rules
+              can be inspected programmatically rather than
+              consuming another generative model call.
+            </p>
+
+          </article>
+
+
+          <article class="feature-card">
+
+            <p class="feature-label">
+              SCOPED EXECUTION
+            </p>
+
+            <h3>
+              Limit what each Worker can change.
+            </h3>
+
+            <p>
+              Workspace writes are constrained to the current
+              task scope, reducing unintended repository-wide
+              modifications.
+            </p>
+
+          </article>
+
+
+          <article class="feature-card">
+
+            <p class="feature-label">
+              PATCH-BASED REPLANNING
+            </p>
+
+            <h3>
+              Repair the plan instead of replacing it.
+            </h3>
+
+            <p>
+              When validation reveals a planning problem,
+              targeted operations modify affected milestones
+              rather than regenerating the entire plan.
+            </p>
+
+          </article>
+
+
+          <article class="feature-card">
+
+            <p class="feature-label">
+              FAILURE MEMORY
+            </p>
+
+            <h3>
+              Reuse lessons from previous failures.
+            </h3>
+
+            <p>
+              Failures can be distilled into concise lessons
+              and surfaced in later work so recurring mistakes
+              do not always start from zero.
+            </p>
+
+          </article>
+
+
+          <article class="feature-card">
+
+            <p class="feature-label">
+              SKILL ROUTING
+            </p>
+
+            <h3>
+              Retrieve capabilities when they are needed.
+            </h3>
+
+            <p>
+              Relevant tools can be selected for the current
+              milestone instead of placing the full capability
+              catalogue into every prompt.
+            </p>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         FAILURE MODEL
+    ========================== -->
+
+    <section class="section section-bordered">
+
+      <div class="container">
+
+        <div class="section-heading">
+
+          <p class="eyebrow">
+            05 · RECOVERY
+          </p>
+
+          <h2>
+            Failure is part of the execution model.
+          </h2>
+
+          <p class="section-description">
+            The runtime distinguishes between an
+            implementation that failed and a plan that was
+            wrong in the first place.
+          </p>
+
+        </div>
+
+
+        <div class="recovery-flow">
+
+          <div class="recovery-step">
+            <span>01</span>
+            <strong>Worker implements milestone</strong>
+          </div>
+
+          <div class="recovery-arrow">
+            ↓
+          </div>
+
+          <div class="recovery-step">
+            <span>02</span>
+            <strong>Validator executes contract</strong>
+          </div>
+
+          <div class="recovery-arrow">
+            ↓
+          </div>
+
+          <div class="recovery-step failure-step">
+            <span>03</span>
+            <strong>Validation fails</strong>
+          </div>
+
+          <div class="recovery-arrow">
+            ↓
+          </div>
+
+          <div class="recovery-branches">
+
+            <article class="recovery-branch">
+
+              <p class="feature-label">
+                IMPLEMENTATION FAILURE
+              </p>
+
+              <h3>
+                The plan is valid.
+              </h3>
+
+              <p>
+                Feed raw validation output, diff context and
+                relevant failure memory back into the Worker.
+              </p>
+
+              <div class="branch-outcome">
+                Worker retry →
+              </div>
+
+            </article>
+
+
+            <article class="recovery-branch">
+
+              <p class="feature-label">
+                PLANNING FAILURE
+              </p>
+
+              <h3>
+                The milestone itself is wrong.
+              </h3>
+
+              <p>
+                Escalate to the Orchestrator and patch only
+                the affected part of the plan.
+              </p>
+
+              <div class="branch-outcome">
+                REPLAN →
+              </div>
+
+            </article>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         ENGINEERING TRADE-OFFS
+    ========================== -->
+
+    <section class="section section-bordered">
+
+      <div class="container">
+
+        <div class="section-heading">
+
+          <p class="eyebrow">
+            06 · ENGINEERING UNDER CONSTRAINTS
+          </p>
+
+          <h2>
+            Architectural decisions were driven
+            by the environment.
+          </h2>
+
+        </div>
+
+
+        <div class="decision-list">
+
+          <article class="decision-row">
+
+            <div class="decision-question">
+              <span>01</span>
+              <h3>Serial or parallel agents?</h3>
+            </div>
+
+            <div class="decision-answer">
+
+              <strong>
+                Serial.
+              </strong>
+
+              <p>
+                With constrained local GPU memory, predictable
+                VRAM usage matters more than maximizing
+                concurrency. The system therefore executes one
+                model call at a time.
+              </p>
+
+            </div>
+
+          </article>
+
+
+          <article class="decision-row">
+
+            <div class="decision-question">
+              <span>02</span>
+              <h3>LLM reasoning or deterministic code?</h3>
+            </div>
+
+            <div class="decision-answer">
+
+              <strong>
+                Use deterministic logic wherever possible.
+              </strong>
+
+              <p>
+                Schema issues, invalid dependencies and simple
+                policy violations do not need another LLM
+                inference.
+              </p>
+
+            </div>
+
+          </article>
+
+
+          <article class="decision-row">
+
+            <div class="decision-question">
+              <span>03</span>
+              <h3>Regenerate or patch plans?</h3>
+            </div>
+
+            <div class="decision-answer">
+
+              <strong>
+                Patch.
+              </strong>
+
+              <p>
+                Preserve valid work and mutate only the
+                affected milestones to reduce unnecessary
+                drift.
+              </p>
+
+            </div>
+
+          </article>
+
+
+          <article class="decision-row">
+
+            <div class="decision-question">
+              <span>04</span>
+              <h3>Unrestricted or scoped agents?</h3>
+            </div>
+
+            <div class="decision-answer">
+
+              <strong>
+                Scoped.
+              </strong>
+
+              <p>
+                Restricting tools and file access makes agent
+                behavior easier to reason about and limits
+                the blast radius of mistakes.
+              </p>
+
+            </div>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         TECH STACK
+    ========================== -->
+
+    <section class="section section-bordered">
+
+      <div class="container">
+
+        <div class="section-heading">
+
+          <p class="eyebrow">
+            07 · IMPLEMENTATION
+          </p>
+
+          <h2>
+            Technical stack
+          </h2>
+
+        </div>
+
+
+        <div class="stack-grid">
+
+          <div class="stack-group">
+
+            <p class="stack-label">
+              RUNTIME
+            </p>
+
+            <ul>
+              <li>Python</li>
+              <li>FastAPI</li>
+            </ul>
+
+          </div>
+
+
+          <div class="stack-group">
+
+            <p class="stack-label">
+              LOCAL INFERENCE
+            </p>
+
+            <ul>
+              <li>llama.cpp</li>
+              <li>vLLM</li>
+              <li>27B-class local LLMs</li>
+            </ul>
+
+          </div>
+
+
+          <div class="stack-group">
+
+            <p class="stack-label">
+              RETRIEVAL
+            </p>
+
+            <ul>
+              <li>Qdrant</li>
+              <li>Hybrid skill retrieval</li>
+            </ul>
+
+          </div>
+
+
+          <div class="stack-group">
+
+            <p class="stack-label">
+              OBSERVABILITY
+            </p>
+
+            <ul>
+              <li>Arize Phoenix</li>
+              <li>OpenTelemetry</li>
+            </ul>
+
+          </div>
+
+
+          <div class="stack-group">
+
+            <p class="stack-label">
+              INTERFACE
+            </p>
+
+            <ul>
+              <li>React</li>
+              <li>TypeScript</li>
+            </ul>
+
+          </div>
+
+
+          <div class="stack-group">
+
+            <p class="stack-label">
+              SYSTEMS
+            </p>
+
+            <ul>
+              <li>Git</li>
+              <li>CUDA</li>
+              <li>Local sandboxing</li>
+            </ul>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         FINAL CTA
+    ========================== -->
+
+    <section class="section project-cta-section">
+
+      <div class="container">
+
+        <p class="eyebrow">
+          EXPLORE THE IMPLEMENTATION
+        </p>
+
+        <h2 class="cta-heading">
+          The full runtime is available on GitHub.
+        </h2>
+
+        <p class="section-description">
+          Explore the agent prompts, execution runtime,
+          validation logic, memory layer, observability
+          integration and web interface.
+        </p>
+
+        <div class="hero-actions">
+
+          <a
+            href="https://github.com/haaroonafroz/task-coder-agent"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="button button-primary"
+          >
+            Open GitHub repository ↗
+          </a>
+
+          <a
+            href="/"
+            class="button button-secondary"
+          >
+            Back to portfolio
+          </a>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+  <!-- =========================
+       FOOTER
+  ========================== -->
+
+  <footer class="site-footer">
+
+    <div class="container footer-inner">
+
+      <div>
+
+        <strong>
+          Haaroon Afroz
+        </strong>
+
+        <p>
+          AI Engineer · Agentic AI · AI Systems
+        </p>
+
+      </div>
+
+
+      <div class="footer-links">
+
+        <a href="/">
+          Portfolio
+        </a>
+
+        <a
+          href="https://github.com/haaroonafroz"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub
+        </a>
+
+      </div>
+
+    </div>
+
+  </footer>
+
+
+  <script src="/script.js"></script>
+
+</body>
+</html>

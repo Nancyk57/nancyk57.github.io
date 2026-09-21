@@ -2,25 +2,390 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Haaroon Afroz — AI Engineer working on agentic AI, RAG, local LLM systems and AI infrastructure."
+  >
+
   <title>Haaroon Afroz — AI Engineer</title>
-  <link rel="stylesheet" href="styles.css">
+
+  <link rel="stylesheet" href="/styles.css">
 </head>
 
 <body>
 
-  <header>
-    <h1>Haaroon Afroz</h1>
-    <p>AI Engineer · Agentic AI · AI Systems</p>
+  <!-- =========================
+       SITE NAVIGATION
+  ========================== -->
+
+  <header class="site-header">
+    <div class="container nav-container">
+
+      <a href="/" class="site-logo">
+        HA
+      </a>
+
+      <nav class="desktop-nav">
+        <a href="#projects">Projects</a>
+
+        <a
+          href="https://github.com/haaroonafroz"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub
+        </a>
+
+        <a
+          href="https://www.linkedin.com/in/haaroon-afroz-ognawala/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          LinkedIn
+        </a>
+      </nav>
+
+      <button
+        class="mobile-menu-button"
+        aria-label="Open navigation"
+        aria-expanded="false"
+      >
+        Menu
+      </button>
+
+    </div>
+
+    <nav class="mobile-nav">
+      <a href="#projects">Projects</a>
+
+      <a
+        href="https://github.com/haaroonafroz"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        GitHub
+      </a>
+
+      <a
+        href="https://www.linkedin.com/in/haaroon-afroz-ognawala/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        LinkedIn
+      </a>
+    </nav>
+
   </header>
 
-  <main>
-    <h2>Selected Projects</h2>
 
-    <a href="/projects/task-coder-agent/">
-      Agentic Coding Harness
-    </a>
+  <main>
+
+    <!-- =========================
+         HERO
+    ========================== -->
+
+    <section class="home-hero section">
+      <div class="container">
+
+        <p class="eyebrow">
+          AI ENGINEER · AGENTIC SYSTEMS · AI INFRASTRUCTURE
+        </p>
+
+        <h1 class="home-title">
+          I build AI systems that
+          <span class="muted-text">
+            do more than generate text.
+          </span>
+        </h1>
+
+        <p class="home-intro">
+          I'm Haaroon Afroz, an AI Engineer focused on
+          agentic systems, retrieval-augmented generation,
+          local LLM infrastructure, evaluation and production
+          AI applications.
+        </p>
+
+        <div class="hero-actions">
+
+          <a
+            class="button button-primary"
+            href="#projects"
+          >
+            View selected work
+          </a>
+
+          <a
+            class="button button-secondary"
+            href="https://github.com/haaroonafroz"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub
+          </a>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- =========================
+         PROJECTS
+    ========================== -->
+
+    <section
+      class="section section-bordered"
+      id="projects"
+    >
+
+      <div class="container">
+
+        <div class="section-heading">
+
+          <p class="eyebrow">
+            SELECTED WORK
+          </p>
+
+          <h2>
+            Engineering projects
+          </h2>
+
+          <p class="section-description">
+            Selected projects exploring agent architecture,
+            reliable LLM systems, retrieval and model
+            adaptation.
+          </p>
+
+        </div>
+
+
+        <div class="project-grid">
+
+          <!-- PROJECT 1 -->
+
+          <a
+            href="/projects/task-coder-agent/"
+            class="project-card featured-project"
+          >
+
+            <div class="project-card-top">
+
+              <span class="project-number">
+                01
+              </span>
+
+              <span class="project-arrow">
+                ↗
+              </span>
+
+            </div>
+
+            <div class="project-card-content">
+
+              <p class="project-type">
+                AGENT SYSTEMS · LOCAL LLMS
+              </p>
+
+              <h3>
+                Self-Improving Coding Harness
+              </h3>
+
+              <p class="project-question">
+                Can system design make small local LLMs
+                reliable coding agents?
+              </p>
+
+              <p class="project-summary">
+                A local-first multi-agent coding runtime
+                that separates planning, implementation
+                and validation while adding bounded
+                recovery, memory and deterministic
+                safeguards.
+              </p>
+
+            </div>
+
+            <div class="tag-row">
+              <span>Local LLMs</span>
+              <span>Multi-Agent</span>
+              <span>Harness Engineering</span>
+              <span>Evaluation</span>
+            </div>
+
+          </a>
+
+
+          <!-- FUTURE PROJECT 2 -->
+
+          <article class="project-card project-card-placeholder">
+
+            <div class="project-card-top">
+              <span class="project-number">02</span>
+            </div>
+
+            <div class="project-card-content">
+
+              <p class="project-type">
+                REGULATORY AI · AGENTS
+              </p>
+
+              <h3>
+                Regulatory Agent Swarm
+              </h3>
+
+              <p class="project-question">
+                Turning changing regulation into
+                traceable policy updates.
+              </p>
+
+              <p class="project-summary">
+                Multi-agent regulatory monitoring,
+                retrieval and policy adaptation with
+                citation-grounded auditing.
+              </p>
+
+            </div>
+
+            <div class="tag-row">
+              <span>Agentic RAG</span>
+              <span>Qdrant</span>
+              <span>Compliance</span>
+            </div>
+
+          </article>
+
+
+          <!-- FUTURE PROJECT 3 -->
+
+          <article class="project-card project-card-placeholder">
+
+            <div class="project-card-top">
+              <span class="project-number">03</span>
+            </div>
+
+            <div class="project-card-content">
+
+              <p class="project-type">
+                MEDICAL AI · RAG
+              </p>
+
+              <h3>
+                Medical AI Co-Pilot
+              </h3>
+
+              <p class="project-question">
+                Combining clinical knowledge with
+                live patient context safely.
+              </p>
+
+              <p class="project-summary">
+                An agentic RAG system combining
+                clinical retrieval, MCP-connected
+                patient data and human approval
+                checkpoints.
+              </p>
+
+            </div>
+
+            <div class="tag-row">
+              <span>LangGraph</span>
+              <span>MCP</span>
+              <span>HITL</span>
+            </div>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         ABOUT
+    ========================== -->
+
+    <section class="section section-bordered">
+
+      <div class="container narrow-container">
+
+        <p class="eyebrow">
+          ABOUT
+        </p>
+
+        <h2>
+          AI systems from model to production.
+        </h2>
+
+        <p class="large-body">
+          My work spans LLM orchestration, retrieval,
+          local inference, evaluation, observability,
+          APIs and production AI applications.
+        </p>
+
+        <p class="large-body muted-text">
+          I'm particularly interested in the engineering
+          layer around models: the systems that make AI
+          applications more reliable, observable and
+          useful in real workflows.
+        </p>
+
+      </div>
+
+    </section>
+
   </main>
+
+
+  <!-- =========================
+       FOOTER
+  ========================== -->
+
+  <footer class="site-footer">
+
+    <div class="container footer-inner">
+
+      <div>
+        <strong>Haaroon Afroz</strong>
+
+        <p>
+          AI Engineer · Agentic AI · AI Systems
+        </p>
+      </div>
+
+      <div class="footer-links">
+
+        <a
+          href="https://github.com/haaroonafroz"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub
+        </a>
+
+        <a
+          href="https://www.linkedin.com/in/haaroon-afroz-ognawala/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          LinkedIn
+        </a>
+
+      </div>
+
+    </div>
+
+  </footer>
+
+
+  <script src="/script.js"></script>
 
 </body>
 </html>
