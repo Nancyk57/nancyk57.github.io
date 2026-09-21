@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="An inspectable agentic AI workflow for monitoring regulatory change, mapping regulations to internal policies, identifying compliance gaps, drafting amendments and auditing generated output."
+  >
+
+  <title>
+    Regulatory Compliance Agent — Haaroon Afroz
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="/styles.css"
+  >
+
+</head>
+
+
+<body>
+
+
+  <!-- =====================================================
+       NAVIGATION
+  ====================================================== -->
+
+  <header class="site-header">
+
+    <div class="container nav-container">
+
+      <a
+        href="/"
+        class="site-logo"
+      >
+        HA
+      </a>
+
+
+      <nav class="desktop-nav">
+
+        <a href="/">
+          Portfolio
+        </a>
+
+        <a
+          href="https://github.com/haaroonafroz/legal_compliance_agent"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub
+        </a>
+
+      </nav>
+
+
+      <button
+        class="mobile-menu-button"
+        aria-label="Open navigation"
+        aria-expanded="false"
+      >
+        Menu
+      </button>
+
+    </div>
+
+
+    <nav class="mobile-nav">
+
+      <a href="/">
+        Portfolio
+      </a>
+
+      <a
+        href="https://github.com/haaroonafroz/legal_compliance_agent"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        GitHub
+      </a>
+
+    </nav>
+
+  </header>
+
+
+
+  <main>
+
+
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+
+    <section class="project-hero section">
+
+      <div class="container">
+
+
+        <a
+          href="/#projects"
+          class="back-link"
+        >
+          ← Selected projects
+        </a>
+
+
+        <p class="eyebrow project-eyebrow">
+          REGULATORY AI · AGENTIC RAG · COMPLIANCE AUTOMATION
+        </p>
+
+
+        <h1 class="project-title">
+
+          How can AI turn regulatory change into
+
+          <span class="muted-text">
+            traceable policy updates?
+          </span>
+
+        </h1>
+
+
+        <p class="project-lead">
+
+          I built an inspectable compliance workflow that
+          monitors new regulatory material, retrieves the
+          internal policies it may affect, identifies gaps,
+          drafts policy amendments and audits those drafts
+          before producing a final report.
+
+          Rather than relying on one opaque agent, the system
+          decomposes the process into explicit stages with
+          stored state, retrieval evidence and observable
+          model calls.
+
+        </p>
+
+
+        <div class="hero-actions">
+
+          <a
+            href="https://github.com/haaroonafroz/legal_compliance_agent"
+            class="button button-primary"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View repository ↗
+          </a>
+
+          <a
+            href="#architecture"
+            class="button button-secondary"
+          >
+            Explore architecture
+          </a>
+
+        </div>
+
+
+
+        <div class="project-meta-grid">
+
+          <div class="meta-item">
+
+            <span class="meta-label">
+              PROJECT TYPE
+            </span>
+
+            <strong>
+              Personal R&D
+            </strong>
+
+          </div>
+
+
+          <div class="meta-item">
+
+            <span class="meta-label">
+              FOCUS
+            </span>
+
+            <strong>
+              Regulatory intelligence
+            </strong>
+
+          </div>
+
+
+          <div class="meta-item">
+
+            <span class="meta-label">
+              RETRIEVAL
+            </span>
+
+            <strong>
+              Dense + sparse hybrid
+            </strong>
+
+          </div>
+
+
+          <div class="meta-item">
+
+            <span class="meta-label">
+              ORCHESTRATION
+            </span>
+
+            <strong>
+              LlamaIndex Workflow
+            </strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         THE PROBLEM
+    ====================================================== -->
+
+    <section class="section section-bordered">
+
+      <div class="container">
+
+
+        <div class="section-heading">
+
+          <p class="eyebrow">
+            01 · THE PROBLEM
+          </p>
+
+          <h2>
+            Regulatory change creates an information
+            matching problem before it becomes a drafting problem.
+          </h2>
+
+          <p class="section-description">
+
+            New regulations arrive as long, heterogeneous
+            documents mixed with irrelevant website content.
+            Understanding their impact requires connecting
+            specific obligations to the right internal
+            policies before anyone can decide what should
+            change.
+
+          </p>
+
+        </div>
+
+
+
+        <div class="three-column-grid">
+
+
+          <article class="info-card">
+
+            <span class="card-index">
+              01
+            </span>
+
+            <h3>
+              Regulatory noise
+            </h3>
+
+            <p>
+              Crawled sources contain navigation, duplicated
+              content and material that may have nothing to
+              do with a company's actual compliance scope.
+            </p>
+
+          </article>
+
+
+
+          <article class="info-card">
+
+            <span class="card-index">
+              02
+            </span>
+
+            <h3>
+              Policy mapping
+            </h3>
+
+            <p>
+              A new obligation only becomes actionable once
+              it is connected to the internal policies and
+              departments that it may affect.
+            </p>
+
+          </article>
+
+
+
+          <article class="info-card">
+
+            <span class="card-index">
+              03
+            </span>
+
+            <h3>
+              Generated changes need scrutiny
+            </h3>
+
+            <p>
+              A plausible policy amendment is not enough.
+              Drafts need a separate review stage capable of
+              identifying unsupported reasoning,
+              inconsistencies and mismatches.
+            </p>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         DESIGN PRINCIPLE
+    ====================================================== -->
+
+    <section class="section thesis-section">
+
+      <div class="container">
+
+        <p class="eyebrow">
+          02 · DESIGN PRINCIPLE
+        </p>
+
+
+        <div class="thesis-block">
+
+          <p class="thesis-small">
+            REGULATORY CHANGE
+          </p>
+
+          <p class="thesis-symbol">
+            →
+          </p>
+
+          <p class="thesis-large">
+            TRACEABLE DECISIONS
+          </p>
+
+        </div>
+
+
+        <p class="thesis-description">
+
+          The goal was not to create a single autonomous
+          legal chatbot. I designed the workflow so that
+          discovery, retrieval, analysis, drafting and audit
+          remain distinct and inspectable stages.
+
+          This makes intermediate decisions easier to trace,
+          evaluate and improve independently.
+
+        </p>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         ARCHITECTURE
+    ====================================================== -->
+
+    <section
+      class="section section-bordered"
+      id="architecture"
+    >
+
+      <div class="container">
+
+
+        <div class="section-heading">
+
+          <p class="eyebrow">
+            03 · ARCHITECTURE
+          </p>
+
+          <h2>
+            From regulatory source to audited policy draft.
+          </h2>
+
+          <p class="section-description">
+
+            The system separates ingestion and storage from
+            the reasoning workflow. New regulatory material
+            and internal company policies are stored
+            independently and joined only when the workflow
+            determines they are relevant to one another.
+
+          </p>
+
+        </div>
+
+
+
+        <div class="architecture">
+
+
+          <div class="architecture-node primary-node">
+
+            <span class="node-label">
+              INGESTION
+            </span>
+
+            <strong>
+              Regulatory Sources
+            </strong>
+
+            <small>
+              Scrapy · PDF extraction
+            </small>
+
+          </div>
+
+
+          <div class="flow-arrow">
+            ↓
+          </div>
+
+
+          <div class="architecture-node system-node">
+
+            <span class="node-label">
+              STORAGE
+            </span>
+
+            <strong>
+              Regulatory Updates
+            </strong>
+
+            <small>
+              chunked documents + metadata in Qdrant
+            </small>
+
+          </div>
+
+
+          <div class="flow-arrow">
+            ↓
+          </div>
+
+
+          <div class="architecture-node">
+
+            <span class="node-label">
+              STEP 01
+            </span>
+
+            <strong>
+              Horizon Scanner
+            </strong>
+
+            <small>
+              reconstruct complete regulatory documents
+            </small>
+
+          </div>
+
+
+          <div class="flow-arrow">
+            ↓
+          </div>
+
+
+          <div class="architecture-node">
+
+            <span class="node-label">
+              STEP 02
+            </span>
+
+            <strong>
+              Librarian
+            </strong>
+
+            <small>
+              hybrid retrieval against internal policies
+            </small>
+
+          </div>
+
+
+          <div class="flow-arrow">
+            ↓
+          </div>
+
+
+          <div class="architecture-node system-node">
+
+            <span class="node-label">
+              GATE
+            </span>
+
+            <strong>
+              Relevance Check
+            </strong>
+
+            <small>
+              stop noise before expensive reasoning
+            </small>
+
+          </div>
+
+
+          <div class="flow-arrow">
+            ↓
+          </div>
+
+
+          <div class="architecture-node">
+
+            <span class="node-label">
+              STEP 03
+            </span>
+
+            <strong>
+              Analyst
+            </strong>
+
+            <small>
+              regulation ↔ internal policy gap analysis
+            </small>
+
+          </div>
+
+
+          <div class="flow-arrow">
+            ↓
+          </div>
+
+
+          <div class="architecture-node">
+
+            <span class="node-label">
+              STEP 04
+            </span>
+
+            <strong>
+              Redliner
+            </strong>
+
+            <small>
+              draft targeted policy amendments
+            </small>
+
+          </div>
+
+
+          <div class="flow-arrow">
+            ↓
+          </div>
+
+
+          <div class="architecture-node validator-node">
+
+            <span class="node-label">
+              STEP 05
+            </span>
+
+            <strong>
+              Auditor
+            </strong>
+
+            <small>
+              consistency + hallucination review
+            </small>
+
+          </div>
+
+
+          <div class="validation-outcomes">
+
+            <div class="outcome-card">
+
+              <span>PASS</span>
+
+              <strong>
+                Final Report
+              </strong>
+
+            </div>
+
+
+            <div class="outcome-card">
+
+              <span>FAIL</span>
+
+              <strong>
+                Revise Draft
+              </strong>
+
+            </div>
+
+
+            <div class="outcome-card">
+
+              <span>TRACE</span>
+
+              <strong>
+                Observability
+              </strong>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         WORKFLOW ROLES
+    ====================================================== -->
+
+    <section class="section section-bordered">
+
+      <div class="container">
+
+
+        <div class="section-heading">
+
+          <p class="eyebrow">
+            04 · SPECIALIZED WORKFLOW
+          </p>
+
+          <h2>
+            Each stage answers a different question.
+          </h2>
+
+          <p class="section-description">
+
+            Specialization keeps high-volume filtering,
+            information retrieval, legal comparison,
+            drafting and quality control from collapsing
+            into one oversized prompt.
+
+          </p>
+
+        </div>
+
+
+
+        <div class="feature-grid">
+
+
+          <article class="feature-card">
+
+            <p class="feature-label">
+              HORIZON SCANNER
+            </p>
+
+            <h3>
+              What changed?
+            </h3>
+
+            <p>
+
+              Retrieves unprocessed regulatory chunks,
+              groups them by document and reconstructs the
+              original text only when chunk sequence and
+              document identity are consistent.
+
+            </p>
+
+          </article>
+
+
+
+          <article class="feature-card">
+
+            <p class="feature-label">
+              LIBRARIAN
+            </p>
+
+            <h3>
+              Which internal policies matter?
+            </h3>
+
+            <p>
+
+              Searches the internal policy collection using
+              dense and sparse retrieval, metadata filters
+              and rank fusion to surface the policy sections
+              most related to the new regulation.
+
+            </p>
+
+          </article>
+
+
+
+          <article class="feature-card">
+
+            <p class="feature-label">
+              RELEVANCE CHECK
+            </p>
+
+            <h3>
+              Is this worth processing?
+            </h3>
+
+            <p>
+
+              Acts as an early gate that filters irrelevant
+              or noisy regulatory material before invoking
+              the more expensive reasoning stages.
+
+            </p>
+
+          </article>
+
+
+
+          <article class="feature-card">
+
+            <p class="feature-label">
+              ANALYST
+            </p>
+
+            <h3>
+              Where is the compliance gap?
+            </h3>
+
+            <p>
+
+              Compares the regulation with retrieved
+              internal policy context and produces an
+              explicit gap analysis.
+
+            </p>
+
+          </article>
+
+
+
+          <article class="feature-card">
+
+            <p class="feature-label">
+              REDLINER
+            </p>
+
+            <h3>
+              What should change?
+            </h3>
+
+            <p>
+
+              Converts the identified gaps into proposed
+              policy amendments rather than generating an
+              unstructured legal summary.
+
+            </p>
+
+          </article>
+
+
+
+          <article class="feature-card">
+
+            <p class="feature-label">
+              AUDITOR
+            </p>
+
+            <h3>
+              Does the draft survive review?
+            </h3>
+
+            <p>
+
+              Reviews the analysis and proposed amendments
+              for unsupported claims, weak reasoning and
+              inconsistencies before the workflow finalizes
+              its report.
+
+            </p>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         RETRIEVAL
+    ====================================================== -->
+
+    <section class="section section-bordered">
+
+      <div class="container">
+
+
+        <div class="section-heading">
+
+          <p class="eyebrow">
+            05 · RETRIEVAL
+          </p>
+
+          <h2>
+            Legal matching needs more than
+            semantic similarity.
+          </h2>
+
+          <p class="section-description">
+
+            Regulations and internal policies can express
+            similar obligations with different terminology,
+            while exact legal terms can also carry important
+            meaning. The retrieval layer therefore combines
+            dense semantic retrieval with sparse lexical
+            retrieval.
+
+          </p>
+
+        </div>
+
+
+
+        <div class="three-column-grid">
+
+
+          <article class="info-card">
+
+            <span class="card-index">
+              01
+            </span>
+
+            <h3>
+              Dense retrieval
+            </h3>
+
+            <p>
+
+              Embeddings capture semantic similarity between
+              regulatory passages and internal policy
+              sections even when their wording differs.
+
+            </p>
+
+          </article>
+
+
+
+          <article class="info-card">
+
+            <span class="card-index">
+              02
+            </span>
+
+            <h3>
+              Sparse retrieval
+            </h3>
+
+            <p>
+
+              Lexical signals preserve the value of specific
+              terminology, names and exact expressions that
+              semantic vectors alone may underweight.
+
+            </p>
+
+          </article>
+
+
+
+          <article class="info-card">
+
+            <span class="card-index">
+              03
+            </span>
+
+            <h3>
+              Rank fusion + reranking
+            </h3>
+
+            <p>
+
+              Qdrant combines candidate sets using reciprocal
+              rank fusion. When configured, a reranking stage
+              further narrows the retrieved policy context
+              before it reaches the Analyst.
+
+            </p>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         AUDIT LOOP
+    ====================================================== -->
+
+    <section class="section section-bordered">
+
+      <div class="container">
+
+
+        <div class="section-heading">
+
+          <p class="eyebrow">
+            06 · QUALITY CONTROL
+          </p>
+
+          <h2>
+            Generation is not the final step.
+          </h2>
+
+          <p class="section-description">
+
+            Drafting and auditing are intentionally separated.
+            The model that proposes a policy change does not
+            get the final word on whether that change is
+            internally consistent.
+
+          </p>
+
+        </div>
+
+
+
+        <div class="recovery-flow">
+
+
+          <div class="recovery-step">
+
+            <span>01</span>
+
+            <strong>
+              Analyst identifies policy gaps
+            </strong>
+
+          </div>
+
+
+          <div class="recovery-arrow">
+            ↓
+          </div>
+
+
+          <div class="recovery-step">
+
+            <span>02</span>
+
+            <strong>
+              Redliner drafts amendments
+            </strong>
+
+          </div>
+
+
+          <div class="recovery-arrow">
+            ↓
+          </div>
+
+
+          <div class="recovery-step">
+
+            <span>03</span>
+
+            <strong>
+              Auditor independently reviews output
+            </strong>
+
+          </div>
+
+
+          <div class="recovery-arrow">
+            ↓
+          </div>
+
+
+
+          <div class="recovery-branches">
+
+
+            <article class="recovery-branch">
+
+              <p class="feature-label">
+                AUDIT PASSES
+              </p>
+
+              <h3>
+                Finalize the report.
+              </h3>
+
+              <p>
+
+                The workflow records the gap analysis,
+                proposed policy updates and audit result
+                together as the final output.
+
+              </p>
+
+              <div class="branch-outcome">
+                Final report →
+              </div>
+
+            </article>
+
+
+
+            <article class="recovery-branch">
+
+              <p class="feature-label">
+                AUDIT FAILS
+              </p>
+
+              <h3>
+                Return feedback to the Redliner.
+              </h3>
+
+              <p>
+
+                The previous draft and Auditor objections are
+                fed back into the drafting stage for bounded
+                revision instead of silently accepting the
+                first answer.
+
+              </p>
+
+              <div class="branch-outcome">
+                Revise → re-audit
+              </div>
+
+            </article>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         MODEL ROUTING
+    ====================================================== -->
+
+    <section class="section section-bordered">
+
+      <div class="container">
+
+
+        <div class="section-heading">
+
+          <p class="eyebrow">
+            07 · MODEL ROUTING
+          </p>
+
+          <h2>
+            Not every workflow step needs
+            the same model budget.
+          </h2>
+
+          <p class="section-description">
+
+            The system separates low-cost filtering from
+            reasoning-heavy legal analysis so model capacity
+            can be allocated according to the job being done.
+
+          </p>
+
+        </div>
+
+
+
+        <div class="decision-list">
+
+
+          <article class="decision-row">
+
+            <div class="decision-question">
+
+              <span>01</span>
+
+              <h3>
+                Relevance filtering
+              </h3>
+
+            </div>
+
+
+            <div class="decision-answer">
+
+              <strong>
+                Fast, lower-cost model.
+              </strong>
+
+              <p>
+
+                The relevance gate is deliberately routable
+                to a cheaper model because it performs a
+                narrow classification task rather than deep
+                policy analysis.
+
+              </p>
+
+            </div>
+
+          </article>
+
+
+
+          <article class="decision-row">
+
+            <div class="decision-question">
+
+              <span>02</span>
+
+              <h3>
+                Analysis and drafting
+              </h3>
+
+            </div>
+
+
+            <div class="decision-answer">
+
+              <strong>
+                Stronger reasoning models.
+              </strong>
+
+              <p>
+
+                Analyst, Redliner and Auditor stages are
+                routed to the primary workflow model because
+                they require substantially deeper reasoning
+                over regulation and policy context.
+
+              </p>
+
+            </div>
+
+          </article>
+
+
+
+          <article class="decision-row">
+
+            <div class="decision-question">
+
+              <span>03</span>
+
+              <h3>
+                Provider flexibility
+              </h3>
+
+            </div>
+
+
+            <div class="decision-answer">
+
+              <strong>
+                OpenAI or Gemini per workflow configuration.
+              </strong>
+
+              <p>
+
+                The workflow supports configurable providers,
+                including per-step Gemini thinking levels,
+                allowing reasoning depth to vary according to
+                each stage.
+
+              </p>
+
+            </div>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         OBSERVABILITY
+    ====================================================== -->
+
+    <section class="section section-bordered">
+
+      <div class="container">
+
+
+        <div class="section-heading">
+
+          <p class="eyebrow">
+            08 · OBSERVABILITY
+          </p>
+
+          <h2>
+            If a compliance workflow cannot be
+            inspected, it is difficult to improve.
+          </h2>
+
+          <p class="section-description">
+
+            The architecture favors explicit workflow stages
+            and trace-friendly integrations so retrieval,
+            model calls and agent decisions can be examined
+            independently rather than hidden inside one
+            autonomous loop.
+
+          </p>
+
+        </div>
+
+
+
+        <div class="three-column-grid">
+
+
+          <article class="info-card">
+
+            <span class="card-index">
+              01
+            </span>
+
+            <h3>
+              Langfuse
+            </h3>
+
+            <p>
+
+              Captures model traces and execution context for
+              inspection across workflow runs.
+
+            </p>
+
+          </article>
+
+
+
+          <article class="info-card">
+
+            <span class="card-index">
+              02
+            </span>
+
+            <h3>
+              Arize Phoenix
+            </h3>
+
+            <p>
+
+              Provides OpenTelemetry-based tracing for the
+              LlamaIndex and retrieval workflow.
+
+            </p>
+
+          </article>
+
+
+
+          <article class="info-card">
+
+            <span class="card-index">
+              03
+            </span>
+
+            <h3>
+              Intermediate state
+            </h3>
+
+            <p>
+
+              Gap analyses, proposed updates, retrieval
+              context and audit feedback remain separate
+              workflow artifacts instead of disappearing
+              inside an opaque chain.
+
+            </p>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         ENGINEERING DECISIONS
+    ====================================================== -->
+
+    <section class="section section-bordered">
+
+      <div class="container">
+
+
+        <div class="section-heading">
+
+          <p class="eyebrow">
+            09 · ENGINEERING DECISIONS
+          </p>
+
+          <h2>
+            Designing for traceability,
+            cost and retrieval quality.
+          </h2>
+
+        </div>
+
+
+
+        <div class="decision-list">
+
+
+          <article class="decision-row">
+
+            <div class="decision-question">
+
+              <span>01</span>
+
+              <h3>
+                One large agent or explicit workflow?
+              </h3>
+
+            </div>
+
+
+            <div class="decision-answer">
+
+              <strong>
+                Explicit workflow.
+              </strong>
+
+              <p>
+
+                Specialized stages make failures easier to
+                locate and allow retrieval, analysis,
+                drafting and auditing to evolve separately.
+
+              </p>
+
+            </div>
+
+          </article>
+
+
+
+          <article class="decision-row">
+
+            <div class="decision-question">
+
+              <span>02</span>
+
+              <h3>
+                Dense retrieval or hybrid retrieval?
+              </h3>
+
+            </div>
+
+
+            <div class="decision-answer">
+
+              <strong>
+                Hybrid.
+              </strong>
+
+              <p>
+
+                Legal text benefits from both semantic
+                matching and lexical precision, so the
+                retrieval layer combines dense and sparse
+                candidate sets.
+
+              </p>
+
+            </div>
+
+          </article>
+
+
+
+          <article class="decision-row">
+
+            <div class="decision-question">
+
+              <span>03</span>
+
+              <h3>
+                Process every scraped page?
+              </h3>
+
+            </div>
+
+
+            <div class="decision-answer">
+
+              <strong>
+                Filter first.
+              </strong>
+
+              <p>
+
+                A dedicated relevance gate prevents expensive
+                analysis stages from spending tokens on
+                irrelevant regulatory material.
+
+              </p>
+
+            </div>
+
+          </article>
+
+
+
+          <article class="decision-row">
+
+            <div class="decision-question">
+
+              <span>04</span>
+
+              <h3>
+                Accept the first generated draft?
+              </h3>
+
+            </div>
+
+
+            <div class="decision-answer">
+
+              <strong>
+                Audit and revise.
+              </strong>
+
+              <p>
+
+                The drafting model and review model have
+                separate responsibilities, with bounded
+                revision when the Auditor rejects a proposal.
+
+              </p>
+
+            </div>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         TECH STACK
+    ====================================================== -->
+
+    <section class="section section-bordered">
+
+      <div class="container">
+
+
+        <div class="section-heading">
+
+          <p class="eyebrow">
+            10 · IMPLEMENTATION
+          </p>
+
+          <h2>
+            Technical stack
+          </h2>
+
+        </div>
+
+
+
+        <div class="stack-grid">
+
+
+          <div class="stack-group">
+
+            <p class="stack-label">
+              ORCHESTRATION
+            </p>
+
+            <ul>
+              <li>Python</li>
+              <li>LlamaIndex Workflows</li>
+            </ul>
+
+          </div>
+
+
+
+          <div class="stack-group">
+
+            <p class="stack-label">
+              INGESTION
+            </p>
+
+            <ul>
+              <li>Scrapy</li>
+              <li>Docling</li>
+            </ul>
+
+          </div>
+
+
+
+          <div class="stack-group">
+
+            <p class="stack-label">
+              RETRIEVAL
+            </p>
+
+            <ul>
+              <li>Qdrant</li>
+              <li>Dense + Sparse Search</li>
+              <li>RRF Fusion</li>
+              <li>Optional Reranking</li>
+            </ul>
+
+          </div>
+
+
+
+          <div class="stack-group">
+
+            <p class="stack-label">
+              MODELS
+            </p>
+
+            <ul>
+              <li>OpenAI</li>
+              <li>Gemini</li>
+              <li>Configurable model routing</li>
+            </ul>
+
+          </div>
+
+
+
+          <div class="stack-group">
+
+            <p class="stack-label">
+              OBSERVABILITY
+            </p>
+
+            <ul>
+              <li>Langfuse</li>
+              <li>Arize Phoenix</li>
+              <li>OpenTelemetry</li>
+              <li>LangWatch</li>
+            </ul>
+
+          </div>
+
+
+
+          <div class="stack-group">
+
+            <p class="stack-label">
+              DATA
+            </p>
+
+            <ul>
+              <li>Regulatory collection</li>
+              <li>Internal policy collection</li>
+              <li>Structured metadata</li>
+            </ul>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         FINAL CTA
+    ====================================================== -->
+
+    <section class="section project-cta-section">
+
+      <div class="container">
+
+
+        <p class="eyebrow">
+          EXPLORE THE IMPLEMENTATION
+        </p>
+
+
+        <h2 class="cta-heading">
+          Follow the full compliance workflow on GitHub.
+        </h2>
+
+
+        <p class="section-description">
+
+          Explore the ingestion pipeline, Qdrant collections,
+          hybrid retrieval, LlamaIndex workflow, specialized
+          prompts, model routing and observability
+          integrations.
+
+        </p>
+
+
+        <div class="hero-actions">
+
+          <a
+            href="https://github.com/haaroonafroz/legal_compliance_agent"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="button button-primary"
+          >
+            Open GitHub repository ↗
+          </a>
+
+          <a
+            href="/"
+            class="button button-secondary"
+          >
+            Back to portfolio
+          </a>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+
+  <!-- =====================================================
+       FOOTER
+  ====================================================== -->
+
+  <footer class="site-footer">
+
+    <div class="container footer-inner">
+
+
+      <div>
+
+        <strong>
+          Haaroon Afroz
+        </strong>
+
+        <p>
+          AI Engineer · Agentic AI · AI Systems
+        </p>
+
+      </div>
+
+
+      <div class="footer-links">
+
+        <a href="/">
+          Portfolio
+        </a>
+
+        <a
+          href="https://github.com/haaroonafroz"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub
+        </a>
+
+      </div>
+
+    </div>
+
+  </footer>
+
+
+  <script src="/script.js"></script>
+
+</body>
+
+</html>
