@@ -1,408 +1,316 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <meta
-    name="description"
-    content="Haaroon Afroz — AI Engineer working on agentic AI, RAG, local LLM systems and AI infrastructure."
-  >
-
-  <title>Haaroon Afroz — AI Engineer</title>
-
-  <link rel="stylesheet" href="/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nepal_Quake_Watch - Live Earthquake Monitoring for Nepal</title>
+    <meta name="description" content="Nepal_Quake_Watch: Real-time earthquake monitoring for Nepal combining USGS and NEMRC catalogues, ShakeMap intensity, population exposure, and emergency resources.">
+    <meta name="keywords" content="census,disaster-management,disaster-preparedness,disaster-response,disaster-risk-management,earthquakes,gis,github-pages,humanitarian,leaflet,ndrrma,nepal,open-data,population-exposure,seismic-data,seismic-processing,seismology,shakemap,usgs,usgs-earthquake">
+    <meta name="author" content="Nancyk57">
+    <meta property="og:title" content="Nepal_Quake_Watch">
+    <meta property="og:description" content="Live earthquake monitoring for Nepal with USGS + NEMRC catalogues, ShakeMap intensity, and ward-level population exposure.">
+    <meta property="og:url" content="https://github.com/Nancyk57/Nepal_Quake_Watch">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            line-height: 1.7;
+            color: #2c3e50;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: #ffffff;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.6rem;
+            margin-bottom: 10px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            margin-bottom: 20px;
+        }
+        .btn-download {
+            display: inline-block;
+            background: #ffffff;
+            color: #c0392b;
+            padding: 14px 40px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn-download:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        section {
+            padding: 30px 40px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        section:last-child {
+            border-bottom: none;
+        }
+        h2 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #e74c3c;
+            display: inline-block;
+        }
+        h3 {
+            color: #34495e;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            margin-top: 20px;
+        }
+        p {
+            margin-bottom: 15px;
+            color: #555;
+            font-size: 1.05rem;
+        }
+        ul, ol {
+            margin-left: 25px;
+            margin-bottom: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+            color: #555;
+        }
+        .highlight-box {
+            background: #f8f9fa;
+            border-left: 4px solid #e74c3c;
+            padding: 18px 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .feature-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+        .feature-item:hover {
+            border-color: #e74c3c;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .feature-item strong {
+            color: #c0392b;
+        }
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        .step-number {
+            background: #e74c3c;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+        .btn-secondary {
+            display: inline-block;
+            background: #2c3e50;
+            color: white;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        .btn-secondary:hover {
+            background: #34495e;
+            transform: translateY(-2px);
+        }
+        footer {
+            background: #2c3e50;
+            color: #ecf0f1;
+            text-align: center;
+            padding: 25px;
+            font-size: 0.9rem;
+        }
+        @media (max-width: 768px) {
+            header {
+                padding: 30px 20px;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            section {
+                padding: 25px 20px;
+            }
+        }
+    </style>
 </head>
-
 <body>
+    <div class="container">
+        <header>
+            <h1>🌐 Nepal_Quake_Watch - Real-Time Safety Awareness Tool</h1>
+            <p>Your trusted companion for earthquake awareness and safety in Nepal</p>
+            <a href="https://github.com/Nancyk57/Nepal_Quake_Watch/releases" class="btn-download">📥 Download Now</a>
+        </header>
 
-  <!-- =========================
-       SITE NAVIGATION
-  ========================== -->
+        <section>
+            <h2>📖 What Is Nepal_Quake_Watch?</h2>
+            <p>Nepal_Quake_Watch is a comprehensive, user-friendly application that brings together high-quality seismic data and essential safety information into one easy-to-use platform. Whether you live in Nepal, have family there, or simply care about disaster awareness, this tool keeps you informed with real-time updates and critical preparedness resources.</p>
+            
+            <div class="highlight-box">
+                💡 Simply put: Nepal_Quake_Watch tells you where earthquakes are happening right now, how strong they are, how many people might be affected, and where to get help if needed. All in one glance.
+            </div>
+        </section>
 
-  <header class="site-header">
-    <div class="container nav-container">
+        <section>
+            <h2>✨ Key Features</h2>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <strong>📡 Live Earthquake Data</strong><br>
+                    Combines official USGS and NEMRC catalogues for the most complete and accurate picture of seismic activity across Nepal.
+                </div>
+                <div class="feature-item">
+                    <strong>🗺️ ShakeMap Intensity</strong><br>
+                    Visual maps show you exactly how strongly the ground is shaking in different areas, helping you gauge the impact immediately.
+                </div>
+                <div class="feature-item">
+                    <strong>👥 Population Exposure</strong><br>
+                    Uses official census data to show how many people live in affected wards, giving you a clear picture of potential impact.
+                </div>
+                <div class="feature-item">
+                    <strong>🏚️ Building Vulnerability</strong><br>
+                    Identifies which structures may be at higher risk during seismic events, promoting safer decision-making.
+                </div>
+                <div class="feature-item">
+                    <strong>🏥 Emergency Resources</strong><br>
+                    Quick access to hospitals and official emergency numbers, so you always know where to turn when seconds matter.
+                </div>
+                <div class="feature-item">
+                    <strong>📱 Interactive Maps</strong><br>
+                    Powered by Leaflet technology, easy-to-navigate maps require no technical expertise. Just click and explore.
+                </div>
+            </div>
+        </section>
 
-      <a href="/" class="site-logo">
-        HA
-      </a>
+        <section>
+            <h2>🚀 Getting Started</h2>
+            <p>Follow these simple steps to install and run Nepal_Quake_Watch on your Windows computer. The entire process takes less than 5 minutes!</p>
+            
+            <div class="step">
+                <div class="step-number">1</div>
+                <div>
+                    <h3>💾 Download the Application</h3>
+                    <p>Visit this link to download the application. This is the only official source, so always use it to ensure you have the latest and safest version.</p>
+                    <a href="https://github.com/Nancyk57/Nepal_Quake_Watch/releases" class="btn-secondary" style="margin-top:10px; display:inline-block;">⬇️ Go to Download Page</a>
+                </div>
+            </div>
 
-      <nav class="desktop-nav">
-        <a href="#projects">Projects</a>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div>
+                    <h3>📂 Save to Your Computer</h3>
+                    <p>Once you click the download link, your browser will prompt you to save a file. Choose a convenient location like your Desktop or Downloads folder and save it there.</p>
+                </div>
+            </div>
 
-        <a
-          href="https://github.com/haaroonafroz"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          GitHub
-        </a>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div>
+                    <h3>🖱️ Run the Application</h3>
+                    <p>After the download completes, you will have the application file ready on your computer. Simply double-click the downloaded file to launch Nepal_Quake_Watch. The program will start directly - no installation wizard or complicated setup required.</p>
+                </div>
+            </div>
 
-        <a
-          href="https://www.linkedin.com/in/haaroon-afroz-ognawala/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          LinkedIn
-        </a>
-      </nav>
+            <div class="step">
+                <div class="step-number">4</div>
+                <div>
+                    <h3>✅ Start Exploring</h3>
+                    <p>That's it! The application will open on your screen. Take a moment to explore the interactive map and familiarize yourself with the different layers and features available.</p>
+                </div>
+            </div>
 
-      <button
-        class="mobile-menu-button"
-        aria-label="Open navigation"
-        aria-expanded="false"
-      >
-        Menu
-      </button>
+            <div class="highlight-box">
+                🛡️ <strong>Security Note:</strong> Always download from the official link provided above. Avoid third-party websites to ensure your safety and get the most up-to-date version.
+            </div>
+        </section>
 
+        <section>
+            <h2>💻 System Requirements</h2>
+            <p>Nepal_Quake_Watch is designed to run smoothly on most modern Windows computers. No special hardware is needed:</p>
+            <ul>
+                <li><strong>Operating System:</strong> Windows 10 or Windows 11 (64-bit)</li>
+                <li><strong>RAM:</strong> 4 GB minimum (8 GB recommended)</li>
+                <li><strong>Storage:</strong> Approximately 200 MB of free space</li>
+                <li><strong>Internet Connection:</strong> Required for real-time data updates</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>🆘 Need Help?</h2>
+            <p>We're here to support you. If you encounter any issues or have questions, you can:</p>
+            <ul>
+                <li>🌐 Check the official repository page: <a href="https://github.com/Nancyk57/Nepal_Quake_Watch" style="color:#e74c3c; font-weight:600;">github.com/Nancyk57/Nepal_Quake_Watch</a></li>
+                <li>📧 Look for contact information or the Issues section on the repository to report problems or ask for assistance.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>🌟 Why Choose Nepal_Quake_Watch?</h2>
+            <p>In a country prone to seismic activity, preparation and awareness are key to safety. Nepal_Quake_Watch stands out because:</p>
+            <ul>
+                <li><strong>🔬 Scientific Accuracy:</strong> Trusted data sources - official USGS and NEMRC databases</li>
+                <li><strong>🎯 Local Relevance:</strong> Specifically focused on Nepal, with local ward-level granularity</li>
+                <li><strong>🤝 Open Data:</strong> Built on transparent, publicly available information</li>
+                <li><strong>🆓 Completely Free:</strong> Available at no cost to all users</li>
+                <li><strong>🔄 Regular Updates:</strong> Continuously improved with the latest data and features</li>
+            </ul>
+        </section>
+
+        <footer>
+            <p>🌐 Nepal_Quake_Watch - Stay informed, stay prepared, stay safe.</p>
+            <p>© 2024 Nepal_Quake_Watch Project</p>
+        </footer>
     </div>
-
-    <nav class="mobile-nav">
-      <a href="#projects">Projects</a>
-
-      <a
-        href="https://github.com/haaroonafroz"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        GitHub
-      </a>
-
-      <a
-        href="https://www.linkedin.com/in/haaroon-afroz-ognawala/"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        LinkedIn
-      </a>
-    </nav>
-
-  </header>
-
-
-  <main>
-
-    <!-- =========================
-         HERO
-    ========================== -->
-
-    <section class="home-hero section">
-      <div class="container">
-
-        <p class="eyebrow">
-          AI ENGINEER · AGENTIC SYSTEMS · AI INFRASTRUCTURE
-        </p>
-
-        <h1 class="home-title">
-          I build AI systems that
-          <span class="muted-text">
-            do more than generate text.
-          </span>
-        </h1>
-
-        <p class="home-intro">
-          I'm Haaroon Afroz, an AI Engineer focused on
-          agentic systems, retrieval-augmented generation,
-          local LLM infrastructure, evaluation and production
-          AI applications.
-        </p>
-
-        <div class="hero-actions">
-
-          <a
-            class="button button-primary"
-            href="#projects"
-          >
-            View selected work
-          </a>
-
-          <a
-            class="button button-secondary"
-            href="https://github.com/haaroonafroz"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            GitHub
-          </a>
-
-        </div>
-
-      </div>
-    </section>
-
-
-    <!-- =========================
-         PROJECTS
-    ========================== -->
-
-    <section
-      class="section section-bordered"
-      id="projects"
-    >
-
-      <div class="container">
-
-        <div class="section-heading">
-
-          <p class="eyebrow">
-            SELECTED WORK
-          </p>
-
-          <h2>
-            Engineering projects
-          </h2>
-
-          <p class="section-description">
-            Selected projects exploring agent architecture,
-            reliable LLM systems, retrieval and model
-            adaptation.
-          </p>
-
-        </div>
-
-
-        <div class="project-grid">
-
-          <!-- PROJECT 1 -->
-
-          <a
-            href="/projects/task-coder-agent/"
-            class="project-card featured-project"
-          >
-
-            <div class="project-card-top">
-
-              <span class="project-number">
-                01
-              </span>
-
-              <span class="project-arrow">
-                ↗
-              </span>
-
-            </div>
-
-            <div class="project-card-content">
-
-              <p class="project-type">
-                AGENT SYSTEMS · LOCAL LLMS
-              </p>
-
-              <h3>
-                Self-Improving Coding Harness
-              </h3>
-
-              <p class="project-question">
-                Can system design make small local LLMs
-                reliable coding agents?
-              </p>
-
-              <p class="project-summary">
-                A local-first multi-agent coding runtime
-                that separates planning, implementation
-                and validation while adding bounded
-                recovery, memory and deterministic
-                safeguards.
-              </p>
-
-            </div>
-
-            <div class="tag-row">
-              <span>Local LLMs</span>
-              <span>Multi-Agent</span>
-              <span>Harness Engineering</span>
-              <span>Evaluation</span>
-            </div>
-
-          </a>
-
-
-          <!-- FUTURE PROJECT 2 -->
-
-            <a
-                href="/projects/legal-compliance-agent/"
-                class="project-card"
-            >
-
-            <div class="project-card-top">
-
-                <span class="project-number">
-                02
-                </span>
-
-                <span class="project-arrow">
-                ↗
-                </span>
-
-            </div>
-
-
-            <div class="project-card-content">
-
-                <p class="project-type">
-                REGULATORY AI · AGENTIC RAG
-                </p>
-
-                <h3>
-                Regulatory Compliance Agent
-                </h3>
-
-                <p class="project-question">
-                How can AI turn regulatory change into
-                traceable policy updates?
-                </p>
-
-                <p class="project-summary">
-                An inspectable multi-stage compliance workflow
-                that monitors regulatory material, retrieves
-                affected internal policies, identifies gaps,
-                drafts amendments and audits its own output.
-                </p>
-
-            </div>
-
-
-            <div class="tag-row">
-
-                <span>Agentic RAG</span>
-                <span>Hybrid Retrieval</span>
-                <span>Qdrant</span>
-                <span>LLM Evaluation</span>
-
-            </div>
-
-            </a>
-
-
-          <!-- FUTURE PROJECT 3 -->
-
-          <article class="project-card project-card-placeholder">
-
-            <div class="project-card-top">
-              <span class="project-number">03</span>
-            </div>
-
-            <div class="project-card-content">
-
-              <p class="project-type">
-                MEDICAL AI · RAG
-              </p>
-
-              <h3>
-                Medical AI Co-Pilot
-              </h3>
-
-              <p class="project-question">
-                Combining clinical knowledge with
-                live patient context safely.
-              </p>
-
-              <p class="project-summary">
-                An agentic RAG system combining
-                clinical retrieval, MCP-connected
-                patient data and human approval
-                checkpoints.
-              </p>
-
-            </div>
-
-            <div class="tag-row">
-              <span>LangGraph</span>
-              <span>MCP</span>
-              <span>HITL</span>
-            </div>
-
-          </article>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         ABOUT
-    ========================== -->
-
-    <section class="section section-bordered">
-
-      <div class="container narrow-container">
-
-        <p class="eyebrow">
-          ABOUT
-        </p>
-
-        <h2>
-          AI systems from model to production.
-        </h2>
-
-        <p class="large-body">
-          My work spans LLM orchestration, retrieval,
-          local inference, evaluation, observability,
-          APIs and production AI applications.
-        </p>
-
-        <p class="large-body muted-text">
-          I'm particularly interested in the engineering
-          layer around models: the systems that make AI
-          applications more reliable, observable and
-          useful in real workflows.
-        </p>
-
-      </div>
-
-    </section>
-
-  </main>
-
-
-  <!-- =========================
-       FOOTER
-  ========================== -->
-
-  <footer class="site-footer">
-
-    <div class="container footer-inner">
-
-      <div>
-        <strong>Haaroon Afroz</strong>
-
-        <p>
-          AI Engineer · Agentic AI · AI Systems
-        </p>
-      </div>
-
-      <div class="footer-links">
-
-        <a
-          href="https://github.com/haaroonafroz"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          GitHub
-        </a>
-
-        <a
-          href="https://www.linkedin.com/in/haaroon-afroz-ognawala/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          LinkedIn
-        </a>
-
-      </div>
-
-    </div>
-
-  </footer>
-
-
-  <script src="/script.js"></script>
-
 </body>
 </html>
