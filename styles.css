@@ -1,1186 +1,1359 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-
-  <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <meta
-    name="description"
-    content="A self-improving multi-agent coding runtime designed to make resource-constrained local LLMs more reliable at non-trivial software development tasks."
-  >
-
-  <title>
-    Self-Improving Coding Harness — Haaroon Afroz
-  </title>
-
-  <link
-    rel="stylesheet"
-    href="/styles.css"
-  >
-
-</head>
-
-
-<body>
-
-
-  <!-- =========================
-       NAVIGATION
-  ========================== -->
-
-  <header class="site-header">
-
-    <div class="container nav-container">
-
-      <a href="/" class="site-logo">
-        HA
-      </a>
-
-      <nav class="desktop-nav">
-
-        <a href="/">
-          Portfolio
-        </a>
-
-        <a
-          href="https://github.com/haaroonafroz/task-coder-agent"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          GitHub
-        </a>
-
-      </nav>
-
-      <button
-        class="mobile-menu-button"
-        aria-label="Open navigation"
-        aria-expanded="false"
-      >
-        Menu
-      </button>
-
-    </div>
-
-    <nav class="mobile-nav">
-
-      <a href="/">
-        Portfolio
-      </a>
-
-      <a
-        href="https://github.com/haaroonafroz/task-coder-agent"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        GitHub
-      </a>
-
-    </nav>
-
-  </header>
-
-
-  <main>
-
-
-    <!-- =========================
-         PROJECT HERO
-    ========================== -->
-
-    <section class="project-hero section">
-
-      <div class="container">
-
-        <a
-          href="/#projects"
-          class="back-link"
-        >
-          ← Selected projects
-        </a>
-
-        <p class="eyebrow project-eyebrow">
-          AGENT SYSTEMS · LOCAL LLMS · HARNESS ENGINEERING
-        </p>
-
-        <h1 class="project-title">
-          Can system design make small local LLMs
-          <span class="muted-text">
-            reliable coding agents?
-          </span>
-        </h1>
-
-        <p class="project-lead">
-          I built a local-first multi-agent coding runtime
-          designed around resource-constrained LLMs.
-          Instead of relying on model scale alone, the
-          system moves reliability into the surrounding
-          architecture through specialized roles,
-          validation contracts, deterministic checks,
-          bounded recovery and persistent memory.
-        </p>
-
-
-        <div class="hero-actions">
-
-          <a
-            href="https://github.com/haaroonafroz/task-coder-agent"
-            class="button button-primary"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            View repository ↗
-          </a>
-
-          <a
-            href="#architecture"
-            class="button button-secondary"
-          >
-            Explore architecture
-          </a>
-
-        </div>
-
-
-        <div class="project-meta-grid">
-
-          <div class="meta-item">
-            <span class="meta-label">
-              PROJECT TYPE
-            </span>
-
-            <strong>
-              Personal R&D
-            </strong>
-          </div>
-
-
-          <div class="meta-item">
-            <span class="meta-label">
-              FOCUS
-            </span>
-
-            <strong>
-              Agent reliability
-            </strong>
-          </div>
-
-
-          <div class="meta-item">
-            <span class="meta-label">
-              INFERENCE
-            </span>
-
-            <strong>
-              Local 27B-class LLMs
-            </strong>
-          </div>
-
-
-          <div class="meta-item">
-            <span class="meta-label">
-              EXECUTION
-            </span>
-
-            <strong>
-              Local-first
-            </strong>
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         PROBLEM
-    ========================== -->
-
-    <section class="section section-bordered">
-
-      <div class="container">
-
-        <div class="section-heading">
-
-          <p class="eyebrow">
-            01 · THE PROBLEM
-          </p>
-
-          <h2>
-            Smaller models expose weaknesses
-            that larger models often hide.
-          </h2>
-
-          <p class="section-description">
-            A coding agent has to plan, inspect a repository,
-            edit files, run tools, understand failures and
-            validate the result. Asking one constrained model
-            to do all of those things inside one long context
-            creates several failure modes.
-          </p>
-
-        </div>
-
-
-        <div class="three-column-grid">
-
-          <article class="info-card">
-
-            <span class="card-index">
-              01
-            </span>
-
-            <h3>
-              Long-horizon drift
-            </h3>
-
-            <p>
-              Planning, implementation and debugging compete
-              for the same context. Mistakes early in a task
-              can distort everything that follows.
-            </p>
-
-          </article>
-
-
-          <article class="info-card">
-
-            <span class="card-index">
-              02
-            </span>
-
-            <h3>
-              Failure compounds
-            </h3>
-
-            <p>
-              A bad implementation is different from a bad
-              plan. Treating both as the same failure usually
-              leads to repeated retries without correcting the
-              underlying cause.
-            </p>
-
-          </article>
-
-
-          <article class="info-card">
-
-            <span class="card-index">
-              03
-            </span>
-
-            <h3>
-              Hardware is finite
-            </h3>
-
-            <p>
-              Running several large agents concurrently is
-              unrealistic on constrained local GPUs. The
-              architecture therefore has to work serially and
-              use each model call deliberately.
-            </p>
-
-          </article>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         HYPOTHESIS
-    ========================== -->
-
-    <section class="section thesis-section">
-
-      <div class="container">
-
-        <p class="eyebrow">
-          02 · DESIGN HYPOTHESIS
-        </p>
-
-        <div class="thesis-block">
-
-          <p class="thesis-small">
-            MODEL CAPABILITY
-          </p>
-
-          <p class="thesis-symbol">
-            ≠
-          </p>
-
-          <p class="thesis-large">
-            SYSTEM CAPABILITY
-          </p>
-
-        </div>
-
-        <p class="thesis-description">
-          Instead of asking a smaller model to behave like a
-          frontier model, I designed the runtime so that each
-          model call has a narrower job and the harness takes
-          responsibility for coordination, validation and
-          recovery.
-        </p>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         ARCHITECTURE
-    ========================== -->
-
-    <section
-      class="section section-bordered"
-      id="architecture"
-    >
-
-      <div class="container">
-
-        <div class="section-heading">
-
-          <p class="eyebrow">
-            03 · ARCHITECTURE
-          </p>
-
-          <h2>
-            Separate planning, implementation
-            and validation.
-          </h2>
-
-          <p class="section-description">
-            The runtime routes requests into focused execution
-            paths and keeps the main development loop explicit:
-            plan, implement, validate, recover.
-          </p>
-
-        </div>
-
-
-        <!-- Architecture diagram -->
-
-        <div class="architecture">
-
-          <div class="architecture-node primary-node">
-            <span class="node-label">
-              INPUT
-            </span>
-
-            <strong>
-              User Request
-            </strong>
-          </div>
-
-
-          <div class="flow-arrow">
-            ↓
-          </div>
-
-
-          <div class="architecture-node">
-            <span class="node-label">
-              ROUTING
-            </span>
-
-            <strong>
-              Triage
-            </strong>
-
-            <small>
-              mission · hotfix · review
-            </small>
-          </div>
-
-
-          <div class="flow-arrow">
-            ↓
-          </div>
-
-
-          <div class="architecture-node">
-            <span class="node-label">
-              PLANNING
-            </span>
-
-            <strong>
-              Orchestrator
-            </strong>
-
-            <small>
-              milestones + validation contracts
-            </small>
-          </div>
-
-
-          <div class="flow-arrow">
-            ↓
-          </div>
-
-
-          <div class="architecture-node system-node">
-            <span class="node-label">
-              DETERMINISTIC
-            </span>
-
-            <strong>
-              Plan Linter
-            </strong>
-
-            <small>
-              schema · dependencies · policies
-            </small>
-          </div>
-
-
-          <div class="flow-arrow">
-            ↓
-          </div>
-
-
-          <div class="architecture-node">
-            <span class="node-label">
-              EXECUTION
-            </span>
-
-            <strong>
-              Worker
-            </strong>
-
-            <small>
-              scoped implementation
-            </small>
-          </div>
-
-
-          <div class="flow-arrow">
-            ↓
-          </div>
-
-
-          <div class="architecture-node validator-node">
-            <span class="node-label">
-              QA
-            </span>
-
-            <strong>
-              Validator
-            </strong>
-
-            <small>
-              contracts + diff review
-            </small>
-          </div>
-
-
-          <div class="validation-outcomes">
-
-            <div class="outcome-card">
-              <span>PASS</span>
-              <strong>Commit</strong>
-            </div>
-
-            <div class="outcome-card">
-              <span>FAIL</span>
-              <strong>Worker Retry</strong>
-            </div>
-
-            <div class="outcome-card">
-              <span>REPLAN</span>
-              <strong>Patch Plan</strong>
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <!-- Architecture roles -->
-
-        <div class="four-column-grid architecture-role-grid">
-
-          <article class="role-card">
-
-            <span class="role-number">
-              01
-            </span>
-
-            <h3>
-              Orchestrator
-            </h3>
-
-            <p>
-              Translates a request into bounded milestones,
-              dependencies and acceptance criteria rather
-              than directly writing code.
-            </p>
-
-          </article>
-
-
-          <article class="role-card">
-
-            <span class="role-number">
-              02
-            </span>
-
-            <h3>
-              Worker
-            </h3>
-
-            <p>
-              Implements one scoped milestone using the tools
-              and files relevant to that part of the plan.
-            </p>
-
-          </article>
-
-
-          <article class="role-card">
-
-            <span class="role-number">
-              03
-            </span>
-
-            <h3>
-              Validator
-            </h3>
-
-            <p>
-              Executes validation contracts, inspects the
-              resulting diff and decides whether the work
-              passes, needs implementation repair or requires
-              replanning.
-            </p>
-
-          </article>
-
-
-          <article class="role-card">
-
-            <span class="role-number">
-              04
-            </span>
-
-            <h3>
-              Runtime
-            </h3>
-
-            <p>
-              Owns memory, permissions, retries, plan
-              mutation, session state, observability and
-              execution boundaries.
-            </p>
-
-          </article>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         CORE IDEAS
-    ========================== -->
-
-    <section class="section section-bordered">
-
-      <div class="container">
-
-        <div class="section-heading">
-
-          <p class="eyebrow">
-            04 · CORE SYSTEM IDEAS
-          </p>
-
-          <h2>
-            The harness does more than call
-            three agents.
-          </h2>
-
-        </div>
-
-
-        <div class="feature-grid">
-
-          <article class="feature-card">
-
-            <p class="feature-label">
-              ACCEPTANCE-FIRST
-            </p>
-
-            <h3>
-              Define success before implementation.
-            </h3>
-
-            <p>
-              Milestones carry observable acceptance
-              criteria and validation contracts so the
-              system knows how work will be checked before
-              the Worker starts editing.
-            </p>
-
-          </article>
-
-
-          <article class="feature-card">
-
-            <p class="feature-label">
-              DETERMINISTIC SAFEGUARDS
-            </p>
-
-            <h3>
-              Don't spend reasoning on normal software checks.
-            </h3>
-
-            <p>
-              Plan structure, dependencies and policy rules
-              can be inspected programmatically rather than
-              consuming another generative model call.
-            </p>
-
-          </article>
-
-
-          <article class="feature-card">
-
-            <p class="feature-label">
-              SCOPED EXECUTION
-            </p>
-
-            <h3>
-              Limit what each Worker can change.
-            </h3>
-
-            <p>
-              Workspace writes are constrained to the current
-              task scope, reducing unintended repository-wide
-              modifications.
-            </p>
-
-          </article>
-
-
-          <article class="feature-card">
-
-            <p class="feature-label">
-              PATCH-BASED REPLANNING
-            </p>
-
-            <h3>
-              Repair the plan instead of replacing it.
-            </h3>
-
-            <p>
-              When validation reveals a planning problem,
-              targeted operations modify affected milestones
-              rather than regenerating the entire plan.
-            </p>
-
-          </article>
-
-
-          <article class="feature-card">
-
-            <p class="feature-label">
-              FAILURE MEMORY
-            </p>
-
-            <h3>
-              Reuse lessons from previous failures.
-            </h3>
-
-            <p>
-              Failures can be distilled into concise lessons
-              and surfaced in later work so recurring mistakes
-              do not always start from zero.
-            </p>
-
-          </article>
-
-
-          <article class="feature-card">
-
-            <p class="feature-label">
-              SKILL ROUTING
-            </p>
-
-            <h3>
-              Retrieve capabilities when they are needed.
-            </h3>
-
-            <p>
-              Relevant tools can be selected for the current
-              milestone instead of placing the full capability
-              catalogue into every prompt.
-            </p>
-
-          </article>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         FAILURE MODEL
-    ========================== -->
-
-    <section class="section section-bordered">
-
-      <div class="container">
-
-        <div class="section-heading">
-
-          <p class="eyebrow">
-            05 · RECOVERY
-          </p>
-
-          <h2>
-            Failure is part of the execution model.
-          </h2>
-
-          <p class="section-description">
-            The runtime distinguishes between an
-            implementation that failed and a plan that was
-            wrong in the first place.
-          </p>
-
-        </div>
-
-
-        <div class="recovery-flow">
-
-          <div class="recovery-step">
-            <span>01</span>
-            <strong>Worker implements milestone</strong>
-          </div>
-
-          <div class="recovery-arrow">
-            ↓
-          </div>
-
-          <div class="recovery-step">
-            <span>02</span>
-            <strong>Validator executes contract</strong>
-          </div>
-
-          <div class="recovery-arrow">
-            ↓
-          </div>
-
-          <div class="recovery-step failure-step">
-            <span>03</span>
-            <strong>Validation fails</strong>
-          </div>
-
-          <div class="recovery-arrow">
-            ↓
-          </div>
-
-          <div class="recovery-branches">
-
-            <article class="recovery-branch">
-
-              <p class="feature-label">
-                IMPLEMENTATION FAILURE
-              </p>
-
-              <h3>
-                The plan is valid.
-              </h3>
-
-              <p>
-                Feed raw validation output, diff context and
-                relevant failure memory back into the Worker.
-              </p>
-
-              <div class="branch-outcome">
-                Worker retry →
-              </div>
-
-            </article>
-
-
-            <article class="recovery-branch">
-
-              <p class="feature-label">
-                PLANNING FAILURE
-              </p>
-
-              <h3>
-                The milestone itself is wrong.
-              </h3>
-
-              <p>
-                Escalate to the Orchestrator and patch only
-                the affected part of the plan.
-              </p>
-
-              <div class="branch-outcome">
-                REPLAN →
-              </div>
-
-            </article>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         ENGINEERING TRADE-OFFS
-    ========================== -->
-
-    <section class="section section-bordered">
-
-      <div class="container">
-
-        <div class="section-heading">
-
-          <p class="eyebrow">
-            06 · ENGINEERING UNDER CONSTRAINTS
-          </p>
-
-          <h2>
-            Architectural decisions were driven
-            by the environment.
-          </h2>
-
-        </div>
-
-
-        <div class="decision-list">
-
-          <article class="decision-row">
-
-            <div class="decision-question">
-              <span>01</span>
-              <h3>Serial or parallel agents?</h3>
-            </div>
-
-            <div class="decision-answer">
-
-              <strong>
-                Serial.
-              </strong>
-
-              <p>
-                With constrained local GPU memory, predictable
-                VRAM usage matters more than maximizing
-                concurrency. The system therefore executes one
-                model call at a time.
-              </p>
-
-            </div>
-
-          </article>
-
-
-          <article class="decision-row">
-
-            <div class="decision-question">
-              <span>02</span>
-              <h3>LLM reasoning or deterministic code?</h3>
-            </div>
-
-            <div class="decision-answer">
-
-              <strong>
-                Use deterministic logic wherever possible.
-              </strong>
-
-              <p>
-                Schema issues, invalid dependencies and simple
-                policy violations do not need another LLM
-                inference.
-              </p>
-
-            </div>
-
-          </article>
-
-
-          <article class="decision-row">
-
-            <div class="decision-question">
-              <span>03</span>
-              <h3>Regenerate or patch plans?</h3>
-            </div>
-
-            <div class="decision-answer">
-
-              <strong>
-                Patch.
-              </strong>
-
-              <p>
-                Preserve valid work and mutate only the
-                affected milestones to reduce unnecessary
-                drift.
-              </p>
-
-            </div>
-
-          </article>
-
-
-          <article class="decision-row">
-
-            <div class="decision-question">
-              <span>04</span>
-              <h3>Unrestricted or scoped agents?</h3>
-            </div>
-
-            <div class="decision-answer">
-
-              <strong>
-                Scoped.
-              </strong>
-
-              <p>
-                Restricting tools and file access makes agent
-                behavior easier to reason about and limits
-                the blast radius of mistakes.
-              </p>
-
-            </div>
-
-          </article>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         TECH STACK
-    ========================== -->
-
-    <section class="section section-bordered">
-
-      <div class="container">
-
-        <div class="section-heading">
-
-          <p class="eyebrow">
-            07 · IMPLEMENTATION
-          </p>
-
-          <h2>
-            Technical stack
-          </h2>
-
-        </div>
-
-
-        <div class="stack-grid">
-
-          <div class="stack-group">
-
-            <p class="stack-label">
-              RUNTIME
-            </p>
-
-            <ul>
-              <li>Python</li>
-              <li>FastAPI</li>
-            </ul>
-
-          </div>
-
-
-          <div class="stack-group">
-
-            <p class="stack-label">
-              LOCAL INFERENCE
-            </p>
-
-            <ul>
-              <li>llama.cpp</li>
-              <li>vLLM</li>
-              <li>27B-class local LLMs</li>
-            </ul>
-
-          </div>
-
-
-          <div class="stack-group">
-
-            <p class="stack-label">
-              RETRIEVAL
-            </p>
-
-            <ul>
-              <li>Qdrant</li>
-              <li>Hybrid skill retrieval</li>
-            </ul>
-
-          </div>
-
-
-          <div class="stack-group">
-
-            <p class="stack-label">
-              OBSERVABILITY
-            </p>
-
-            <ul>
-              <li>Arize Phoenix</li>
-              <li>OpenTelemetry</li>
-            </ul>
-
-          </div>
-
-
-          <div class="stack-group">
-
-            <p class="stack-label">
-              INTERFACE
-            </p>
-
-            <ul>
-              <li>React</li>
-              <li>TypeScript</li>
-            </ul>
-
-          </div>
-
-
-          <div class="stack-group">
-
-            <p class="stack-label">
-              SYSTEMS
-            </p>
-
-            <ul>
-              <li>Git</li>
-              <li>CUDA</li>
-              <li>Local sandboxing</li>
-            </ul>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         FINAL CTA
-    ========================== -->
-
-    <section class="section project-cta-section">
-
-      <div class="container">
-
-        <p class="eyebrow">
-          EXPLORE THE IMPLEMENTATION
-        </p>
-
-        <h2 class="cta-heading">
-          The full runtime is available on GitHub.
-        </h2>
-
-        <p class="section-description">
-          Explore the agent prompts, execution runtime,
-          validation logic, memory layer, observability
-          integration and web interface.
-        </p>
-
-        <div class="hero-actions">
-
-          <a
-            href="https://github.com/haaroonafroz/task-coder-agent"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="button button-primary"
-          >
-            Open GitHub repository ↗
-          </a>
-
-          <a
-            href="/"
-            class="button button-secondary"
-          >
-            Back to portfolio
-          </a>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-  </main>
-
-
-  <!-- =========================
-       FOOTER
-  ========================== -->
-
-  <footer class="site-footer">
-
-    <div class="container footer-inner">
-
-      <div>
-
-        <strong>
-          Haaroon Afroz
-        </strong>
-
-        <p>
-          AI Engineer · Agentic AI · AI Systems
-        </p>
-
-      </div>
-
-
-      <div class="footer-links">
-
-        <a href="/">
-          Portfolio
-        </a>
-
-        <a
-          href="https://github.com/haaroonafroz"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          GitHub
-        </a>
-
-      </div>
-
-    </div>
-
-  </footer>
-
-
-  <script src="/script.js"></script>
-
-</body>
-</html>
+/* =========================================================
+   1. BASE
+========================================================= */
+
+:root {
+    --background: #0c0c0d;
+    --surface: #131315;
+    --surface-light: #18181b;
+  
+    --text: #f4f4f5;
+    --text-secondary: #a1a1aa;
+    --text-muted: #71717a;
+  
+    --border: #27272a;
+    --border-light: #3f3f46;
+  
+    --max-width: 1180px;
+    --reading-width: 760px;
+  
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 22px;
+  
+    --transition: 180ms ease;
+  }
+  
+  
+  * {
+    box-sizing: border-box;
+  }
+  
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  
+  body {
+    margin: 0;
+  
+    background:
+      radial-gradient(
+        circle at 50% -20%,
+        rgba(255, 255, 255, 0.055),
+        transparent 30%
+      ),
+      var(--background);
+  
+    color: var(--text);
+  
+    font-family:
+      Inter,
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
+  
+    line-height: 1.6;
+  }
+  
+  
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  
+  
+  img {
+    max-width: 100%;
+    display: block;
+  }
+  
+  
+  button {
+    font: inherit;
+  }
+  
+  
+  /* =========================================================
+     2. LAYOUT
+  ========================================================= */
+  
+  .container {
+    width: min(
+      calc(100% - 40px),
+      var(--max-width)
+    );
+  
+    margin-inline: auto;
+  }
+  
+  
+  .narrow-container {
+    max-width: var(--reading-width);
+  }
+  
+  
+  .section {
+    padding: 110px 0;
+  }
+  
+  
+  .section-bordered {
+    border-top: 1px solid var(--border);
+  }
+  
+  
+  .section-heading {
+    max-width: 760px;
+    margin-bottom: 56px;
+  }
+  
+  
+  .section-heading h2,
+  .narrow-container h2 {
+    margin: 10px 0 18px;
+  
+    font-size: clamp(
+      2rem,
+      4vw,
+      3.5rem
+    );
+  
+    line-height: 1.08;
+    letter-spacing: -0.04em;
+  }
+  
+  
+  .section-description {
+    max-width: 700px;
+  
+    margin: 0;
+  
+    color: var(--text-secondary);
+  
+    font-size: 1.1rem;
+  }
+  
+  
+  .eyebrow {
+    margin: 0 0 20px;
+  
+    color: var(--text-muted);
+  
+    font-family:
+      "SFMono-Regular",
+      Consolas,
+      "Liberation Mono",
+      monospace;
+  
+    font-size: 0.78rem;
+  
+    letter-spacing: 0.12em;
+  
+    text-transform: uppercase;
+  }
+  
+  
+  .muted-text {
+    color: var(--text-secondary);
+  }
+  
+  
+  .large-body {
+    font-size: 1.35rem;
+    line-height: 1.65;
+  }
+  
+  
+  /* =========================================================
+     3. NAVIGATION
+  ========================================================= */
+  
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  
+    background: rgba(12, 12, 13, 0.88);
+  
+    border-bottom: 1px solid var(--border);
+  
+    backdrop-filter: blur(16px);
+  }
+  
+  
+  .nav-container {
+    min-height: 72px;
+  
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  
+  .site-logo {
+    width: 38px;
+    height: 38px;
+  
+    display: grid;
+    place-items: center;
+  
+    border: 1px solid var(--border-light);
+    border-radius: 50%;
+  
+    font-weight: 700;
+    font-size: 0.85rem;
+  
+    transition: var(--transition);
+  }
+  
+  
+  .site-logo:hover {
+    border-color: var(--text-secondary);
+  }
+  
+  
+  .desktop-nav {
+    display: flex;
+    align-items: center;
+  
+    gap: 28px;
+  
+    color: var(--text-secondary);
+  
+    font-size: 0.92rem;
+  }
+  
+  
+  .desktop-nav a {
+    transition: color var(--transition);
+  }
+  
+  
+  .desktop-nav a:hover {
+    color: var(--text);
+  }
+  
+  
+  .mobile-menu-button {
+    display: none;
+  
+    color: var(--text);
+    background: transparent;
+  
+    border: 0;
+  
+    cursor: pointer;
+  }
+  
+  
+  .mobile-nav {
+    display: none;
+  }
+  
+  
+  /* =========================================================
+     4. BUTTONS
+  ========================================================= */
+  
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+  
+    gap: 12px;
+  
+    margin-top: 34px;
+  }
+  
+  
+  .button {
+    min-height: 48px;
+  
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  
+    padding: 0 20px;
+  
+    border-radius: var(--radius-sm);
+  
+    font-size: 0.92rem;
+    font-weight: 600;
+  
+    transition:
+      background var(--transition),
+      border-color var(--transition),
+      transform var(--transition);
+  }
+  
+  
+  .button:hover {
+    transform: translateY(-1px);
+  }
+  
+  
+  .button-primary {
+    color: #111;
+  
+    background: #f5f5f5;
+  
+    border: 1px solid #f5f5f5;
+  }
+  
+  
+  .button-primary:hover {
+    background: #d4d4d8;
+  }
+  
+  
+  .button-secondary {
+    color: var(--text);
+  
+    background: transparent;
+  
+    border: 1px solid var(--border-light);
+  }
+  
+  
+  .button-secondary:hover {
+    background: var(--surface-light);
+  
+    border-color: var(--text-muted);
+  }
+  
+  
+  /* =========================================================
+     5. HOMEPAGE HERO
+  ========================================================= */
+  
+  .home-hero {
+    padding-top: 150px;
+    padding-bottom: 150px;
+  }
+  
+  
+  .home-title {
+    max-width: 980px;
+  
+    margin: 0;
+  
+    font-size: clamp(
+      3rem,
+      7vw,
+      6.5rem
+    );
+  
+    line-height: 0.98;
+    letter-spacing: -0.06em;
+  }
+  
+  
+  .home-intro {
+    max-width: 700px;
+  
+    margin-top: 34px;
+  
+    color: var(--text-secondary);
+  
+    font-size: clamp(
+      1.1rem,
+      2vw,
+      1.35rem
+    );
+  }
+  
+  
+  /* =========================================================
+     6. PROJECT CARDS
+  ========================================================= */
+  
+  .project-grid {
+    display: grid;
+  
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  
+    gap: 18px;
+  }
+  
+  
+  .project-card {
+    min-height: 420px;
+  
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  
+    padding: 30px;
+  
+    background: var(--surface);
+  
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+  
+    transition:
+      transform var(--transition),
+      border-color var(--transition),
+      background var(--transition);
+  }
+  
+  
+  a.project-card:hover {
+    transform: translateY(-4px);
+  
+    background: var(--surface-light);
+  
+    border-color: var(--border-light);
+  }
+  
+  
+  .featured-project {
+    grid-column: span 2;
+  
+    min-height: 480px;
+  }
+  
+  
+  .project-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  
+    color: var(--text-muted);
+  
+    font-family:
+      "SFMono-Regular",
+      Consolas,
+      monospace;
+  
+    font-size: 0.85rem;
+  }
+  
+  
+  .project-arrow {
+    font-size: 1.3rem;
+  }
+  
+  
+  .project-card-content {
+    max-width: 720px;
+  }
+  
+  
+  .project-type {
+    margin: 0 0 16px;
+  
+    color: var(--text-muted);
+  
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+  }
+  
+  
+  .project-card h3 {
+    margin: 0;
+  
+    font-size: clamp(
+      1.8rem,
+      3vw,
+      3.3rem
+    );
+  
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+  }
+  
+  
+  .project-question {
+    margin: 22px 0 0;
+  
+    font-size: 1.25rem;
+  
+    color: var(--text);
+  }
+  
+  
+  .project-summary {
+    max-width: 660px;
+  
+    margin: 16px 0 0;
+  
+    color: var(--text-secondary);
+  
+    font-size: 1rem;
+  }
+  
+  
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+  
+    gap: 8px;
+  
+    margin-top: 32px;
+  }
+  
+  
+  .tag-row span {
+    padding: 7px 11px;
+  
+    color: var(--text-secondary);
+  
+    border: 1px solid var(--border-light);
+    border-radius: 100px;
+  
+    font-size: 0.75rem;
+  }
+  
+  
+  .project-card-placeholder {
+    opacity: 0.65;
+  }
+  
+  
+  /* =========================================================
+     7. PROJECT HERO
+  ========================================================= */
+  
+  .project-hero {
+    padding-top: 110px;
+    padding-bottom: 100px;
+  }
+  
+  
+  .back-link {
+    display: inline-block;
+  
+    margin-bottom: 70px;
+  
+    color: var(--text-muted);
+  
+    font-size: 0.9rem;
+  
+    transition: color var(--transition);
+  }
+  
+  
+  .back-link:hover {
+    color: var(--text);
+  }
+  
+  
+  .project-title {
+    max-width: 1000px;
+  
+    margin: 0;
+  
+    font-size: clamp(
+      3rem,
+      6vw,
+      6rem
+    );
+  
+    line-height: 0.99;
+    letter-spacing: -0.055em;
+  }
+  
+  
+  .project-lead {
+    max-width: 780px;
+  
+    margin: 34px 0 0;
+  
+    color: var(--text-secondary);
+  
+    font-size: 1.25rem;
+    line-height: 1.65;
+  }
+  
+  
+  .project-meta-grid {
+    margin-top: 80px;
+  
+    display: grid;
+  
+    grid-template-columns:
+      repeat(4, minmax(0, 1fr));
+  
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  
+  
+  .meta-item {
+    padding: 24px 16px 24px 0;
+  }
+  
+  
+  .meta-item + .meta-item {
+    padding-left: 24px;
+  
+    border-left: 1px solid var(--border);
+  }
+  
+  
+  .meta-label {
+    display: block;
+  
+    margin-bottom: 8px;
+  
+    color: var(--text-muted);
+  
+    font-family:
+      "SFMono-Regular",
+      Consolas,
+      monospace;
+  
+    font-size: 0.68rem;
+  
+    letter-spacing: 0.1em;
+  }
+  
+  
+  .meta-item strong {
+    font-size: 0.95rem;
+  }
+  
+  
+  /* =========================================================
+     8. GENERAL CARDS
+  ========================================================= */
+  
+  .three-column-grid {
+    display: grid;
+  
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  
+    gap: 16px;
+  }
+  
+  
+  .four-column-grid {
+    display: grid;
+  
+    grid-template-columns:
+      repeat(4, minmax(0, 1fr));
+  
+    gap: 14px;
+  }
+  
+  
+  .info-card,
+  .role-card,
+  .feature-card {
+    padding: 28px;
+  
+    background: var(--surface);
+  
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+  }
+  
+  
+  .card-index,
+  .role-number {
+    display: block;
+  
+    margin-bottom: 50px;
+  
+    color: var(--text-muted);
+  
+    font-family:
+      "SFMono-Regular",
+      Consolas,
+      monospace;
+  
+    font-size: 0.76rem;
+  }
+  
+  
+  .info-card h3,
+  .role-card h3,
+  .feature-card h3 {
+    margin: 0 0 14px;
+  
+    font-size: 1.25rem;
+  
+    letter-spacing: -0.02em;
+  }
+  
+  
+  .info-card p,
+  .role-card p,
+  .feature-card p {
+    margin: 0;
+  
+    color: var(--text-secondary);
+  }
+  
+  
+  /* =========================================================
+     9. THESIS
+  ========================================================= */
+  
+  .thesis-section {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(255,255,255,0.025),
+        transparent
+      );
+  }
+  
+  
+  .thesis-block {
+    max-width: 900px;
+  
+    margin: 80px 0 40px;
+  
+    display: flex;
+    flex-direction: column;
+  }
+  
+  
+  .thesis-small,
+  .thesis-large,
+  .thesis-symbol {
+    margin: 0;
+  
+    font-weight: 700;
+  
+    letter-spacing: -0.05em;
+  }
+  
+  
+  .thesis-small {
+    color: var(--text-secondary);
+  
+    font-size: clamp(
+      2.5rem,
+      6vw,
+      5.5rem
+    );
+  }
+  
+  
+  .thesis-symbol {
+    color: var(--text-muted);
+  
+    font-size: 4rem;
+  }
+  
+  
+  .thesis-large {
+    font-size: clamp(
+      3rem,
+      8vw,
+      7rem
+    );
+  
+    line-height: 1;
+  }
+  
+  
+  .thesis-description {
+    max-width: 740px;
+  
+    color: var(--text-secondary);
+  
+    font-size: 1.2rem;
+  }
+  
+  
+  /* =========================================================
+     10. ARCHITECTURE
+  ========================================================= */
+  
+  .architecture {
+    max-width: 700px;
+  
+    margin: 0 auto 70px;
+  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  
+  .architecture-node {
+    width: min(100%, 430px);
+  
+    padding: 22px 26px;
+  
+    text-align: center;
+  
+    background: var(--surface);
+  
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+  }
+  
+  
+  .architecture-node strong {
+    display: block;
+  
+    font-size: 1.25rem;
+  }
+  
+  
+  .architecture-node small {
+    display: block;
+  
+    margin-top: 6px;
+  
+    color: var(--text-muted);
+  }
+  
+  
+  .node-label {
+    display: block;
+  
+    margin-bottom: 7px;
+  
+    color: var(--text-muted);
+  
+    font-family:
+      "SFMono-Regular",
+      Consolas,
+      monospace;
+  
+    font-size: 0.68rem;
+  
+    letter-spacing: 0.1em;
+  }
+  
+  
+  .primary-node {
+    border-color: #52525b;
+  }
+  
+  
+  .system-node {
+    border-style: dashed;
+  }
+  
+  
+  .validator-node {
+    border-color: #71717a;
+  }
+  
+  
+  .flow-arrow,
+  .recovery-arrow {
+    padding: 12px 0;
+  
+    color: var(--text-muted);
+  
+    font-size: 1.3rem;
+  }
+  
+  
+  .validation-outcomes {
+    width: 100%;
+  
+    margin-top: 26px;
+  
+    display: grid;
+  
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  
+    gap: 10px;
+  }
+  
+  
+  .outcome-card {
+    padding: 18px;
+  
+    text-align: center;
+  
+    background: var(--surface);
+  
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+  }
+  
+  
+  .outcome-card span {
+    display: block;
+  
+    margin-bottom: 6px;
+  
+    color: var(--text-muted);
+  
+    font-family:
+      "SFMono-Regular",
+      Consolas,
+      monospace;
+  
+    font-size: 0.7rem;
+  }
+  
+  
+  .outcome-card strong {
+    font-size: 0.9rem;
+  }
+  
+  
+  /* =========================================================
+     11. FEATURES
+  ========================================================= */
+  
+  .feature-grid {
+    display: grid;
+  
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  
+    gap: 14px;
+  }
+  
+  
+  .feature-card {
+    min-height: 280px;
+  }
+  
+  
+  .feature-label {
+    margin: 0 0 50px !important;
+  
+    color: var(--text-muted) !important;
+  
+    font-family:
+      "SFMono-Regular",
+      Consolas,
+      monospace;
+  
+    font-size: 0.72rem;
+  
+    letter-spacing: 0.09em;
+  }
+  
+  
+  /* =========================================================
+     12. RECOVERY
+  ========================================================= */
+  
+  .recovery-flow {
+    max-width: 900px;
+  
+    margin-inline: auto;
+  }
+  
+  
+  .recovery-step {
+    max-width: 500px;
+  
+    margin-inline: auto;
+  
+    display: flex;
+    align-items: center;
+  
+    gap: 24px;
+  
+    padding: 20px 24px;
+  
+    background: var(--surface);
+  
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+  }
+  
+  
+  .recovery-step span {
+    color: var(--text-muted);
+  
+    font-family:
+      "SFMono-Regular",
+      Consolas,
+      monospace;
+  }
+  
+  
+  .recovery-arrow {
+    text-align: center;
+  }
+  
+  
+  .failure-step {
+    border-color: #52525b;
+  }
+  
+  
+  .recovery-branches {
+    display: grid;
+  
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  
+    gap: 16px;
+  
+    margin-top: 24px;
+  }
+  
+  
+  .recovery-branch {
+    padding: 30px;
+  
+    background: var(--surface);
+  
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+  }
+  
+  
+  .recovery-branch h3 {
+    margin: 0 0 14px;
+  }
+  
+  
+  .recovery-branch p {
+    color: var(--text-secondary);
+  }
+  
+  
+  .branch-outcome {
+    margin-top: 32px;
+  
+    font-weight: 600;
+  }
+  
+  
+  /* =========================================================
+     13. DECISIONS
+  ========================================================= */
+  
+  .decision-list {
+    border-top: 1px solid var(--border);
+  }
+  
+  
+  .decision-row {
+    display: grid;
+  
+    grid-template-columns:
+      0.9fr 1.4fr;
+  
+    gap: 50px;
+  
+    padding: 38px 0;
+  
+    border-bottom: 1px solid var(--border);
+  }
+  
+  
+  .decision-question {
+    display: flex;
+  
+    gap: 20px;
+  }
+  
+  
+  .decision-question span {
+    color: var(--text-muted);
+  
+    font-family:
+      "SFMono-Regular",
+      Consolas,
+      monospace;
+  
+    font-size: 0.75rem;
+  }
+  
+  
+  .decision-question h3 {
+    margin: 0;
+  }
+  
+  
+  .decision-answer strong {
+    display: block;
+  
+    margin-bottom: 8px;
+  }
+  
+  
+  .decision-answer p {
+    margin: 0;
+  
+    color: var(--text-secondary);
+  }
+  
+  
+  /* =========================================================
+     14. STACK
+  ========================================================= */
+  
+  .stack-grid {
+    display: grid;
+  
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  
+    gap: 1px;
+  
+    overflow: hidden;
+  
+    background: var(--border);
+  
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+  }
+  
+  
+  .stack-group {
+    padding: 30px;
+  
+    background: var(--surface);
+  }
+  
+  
+  .stack-label {
+    margin: 0 0 24px;
+  
+    color: var(--text-muted);
+  
+    font-family:
+      "SFMono-Regular",
+      Consolas,
+      monospace;
+  
+    font-size: 0.7rem;
+  
+    letter-spacing: 0.1em;
+  }
+  
+  
+  .stack-group ul {
+    margin: 0;
+    padding: 0;
+  
+    list-style: none;
+  }
+  
+  
+  .stack-group li {
+    margin: 8px 0;
+  
+    color: var(--text-secondary);
+  }
+  
+  
+  /* =========================================================
+     15. CTA
+  ========================================================= */
+  
+  .project-cta-section {
+    padding-top: 140px;
+    padding-bottom: 140px;
+  }
+  
+  
+  .cta-heading {
+    max-width: 760px;
+  
+    margin: 0;
+  
+    font-size: clamp(
+      2.5rem,
+      5vw,
+      4.8rem
+    );
+  
+    line-height: 1.05;
+    letter-spacing: -0.05em;
+  }
+  
+  
+  /* =========================================================
+     16. FOOTER
+  ========================================================= */
+  
+  .site-footer {
+    padding: 50px 0;
+  
+    border-top: 1px solid var(--border);
+  }
+  
+  
+  .footer-inner {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  
+    gap: 30px;
+  }
+  
+  
+  .footer-inner p {
+    margin: 6px 0 0;
+  
+    color: var(--text-muted);
+  
+    font-size: 0.9rem;
+  }
+  
+  
+  .footer-links {
+    display: flex;
+  
+    gap: 24px;
+  
+    color: var(--text-secondary);
+  
+    font-size: 0.9rem;
+  }
+  
+  
+  /* =========================================================
+     17. RESPONSIVE
+  ========================================================= */
+  
+  @media (max-width: 900px) {
+  
+    .section {
+      padding: 80px 0;
+    }
+  
+  
+    .three-column-grid,
+    .four-column-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  
+  
+    .project-meta-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  
+  
+    .meta-item:nth-child(3) {
+      border-left: 0;
+      border-top: 1px solid var(--border);
+    }
+  
+  
+    .meta-item:nth-child(4) {
+      border-top: 1px solid var(--border);
+    }
+  
+  
+    .feature-grid {
+      grid-template-columns: 1fr;
+    }
+  
+  
+    .stack-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  
+  }
+  
+  
+  @media (max-width: 700px) {
+  
+    .container {
+      width: min(
+        calc(100% - 28px),
+        var(--max-width)
+      );
+    }
+  
+  
+    .home-hero {
+      padding-top: 100px;
+      padding-bottom: 100px;
+    }
+  
+  
+    .desktop-nav {
+      display: none;
+    }
+  
+  
+    .mobile-menu-button {
+      display: block;
+    }
+  
+  
+    .mobile-nav {
+      display: none;
+  
+      flex-direction: column;
+  
+      gap: 16px;
+  
+      padding:
+        20px
+        max(14px, calc((100% - var(--max-width)) / 2));
+  
+      border-top: 1px solid var(--border);
+    }
+  
+  
+    .mobile-nav.open {
+      display: flex;
+    }
+  
+  
+    .featured-project {
+      grid-column: span 1;
+    }
+  
+  
+    .project-grid,
+    .three-column-grid,
+    .four-column-grid,
+    .recovery-branches,
+    .stack-grid {
+      grid-template-columns: 1fr;
+    }
+  
+  
+    .project-card {
+      min-height: 380px;
+    }
+  
+  
+    .project-meta-grid {
+      grid-template-columns: 1fr;
+    }
+  
+  
+    .meta-item,
+    .meta-item + .meta-item {
+      padding: 18px 0;
+  
+      border-left: 0;
+      border-top: 1px solid var(--border);
+    }
+  
+  
+    .meta-item:first-child {
+      border-top: 0;
+    }
+  
+  
+    .validation-outcomes {
+      grid-template-columns: 1fr;
+    }
+  
+  
+    .decision-row {
+      grid-template-columns: 1fr;
+  
+      gap: 20px;
+    }
+  
+  
+    .footer-inner {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  
+  }
